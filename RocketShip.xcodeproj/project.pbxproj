@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA587E8025F7DBDB001A678E /* ADAM.CGPRO.otf in Resources */ = {isa = PBXBuildFile; fileRef = CA587E7F25F7DBDB001A678E /* ADAM.CGPRO.otf */; };
+		CA587E8525F7DF70001A678E /* theboldfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA587E8425F7DF70001A678E /* theboldfont.ttf */; };
 		CAD58F4D25F6637600B87D72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD58F4C25F6637600B87D72 /* AppDelegate.swift */; };
 		CAD58F4F25F6637600B87D72 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = CAD58F4E25F6637600B87D72 /* GameScene.sks */; };
 		CAD58F5125F6637600B87D72 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = CAD58F5025F6637600B87D72 /* Actions.sks */; };
@@ -36,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA587E7F25F7DBDB001A678E /* ADAM.CGPRO.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ADAM.CGPRO.otf; sourceTree = "<group>"; };
+		CA587E8425F7DF70001A678E /* theboldfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = theboldfont.ttf; sourceTree = "<group>"; };
 		CAD58F4925F6637600B87D72 /* RocketShip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RocketShip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAD58F4C25F6637600B87D72 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CAD58F4E25F6637600B87D72 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				CAD58F5025F6637600B87D72 /* Actions.sks */,
 				CAD58F5225F6637600B87D72 /* GameScene.swift */,
 				CAD58F5425F6637600B87D72 /* GameViewController.swift */,
+				CA587E8425F7DF70001A678E /* theboldfont.ttf */,
+				CA587E7F25F7DBDB001A678E /* ADAM.CGPRO.otf */,
 				CAD58F5625F6637600B87D72 /* Main.storyboard */,
 				CAD58F5925F6637700B87D72 /* Assets.xcassets */,
 				CAD58F5B25F6637700B87D72 /* Info.plist */,
@@ -234,6 +240,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA587E8525F7DF70001A678E /* theboldfont.ttf in Resources */,
+				CA587E8025F7DBDB001A678E /* ADAM.CGPRO.otf in Resources */,
 				CAD58F5825F6637600B87D72 /* Main.storyboard in Resources */,
 				CAD58F4F25F6637600B87D72 /* GameScene.sks in Resources */,
 				CAD58F5A25F6637700B87D72 /* Assets.xcassets in Resources */,

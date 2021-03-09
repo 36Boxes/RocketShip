@@ -30,6 +30,11 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>theboldfont.ttf</string>
+		<string>ADAM.CG PRO.otf</string>
+	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarHidden</key>
