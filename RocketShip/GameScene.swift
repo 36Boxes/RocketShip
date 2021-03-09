@@ -53,6 +53,8 @@ class GameScene: SKScene {
         player.position = CGPoint(x: self.size.width/2, y: self.size.height * 0.2)
         player.zPosition = 2
         self.addChild(player)
+        
+        startNewLevel()
     }
     
     // Fire Bullet function
@@ -74,12 +76,40 @@ class GameScene: SKScene {
     
     func createOPPS(){
         
+        let randomXStart = CGFloat.random(in: gameArea.minX - 30..<gameArea.maxX + 40)
+        let randomXEnd = CGFloat.random(in: gameArea.minX - 30..<gameArea.maxX + 40)
         
+        let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
+        let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
         
+        let enemy = SKSpriteNode(imageNamed: "enemyShip")
+        enemy.position = startPoint
+        enemy.zPosition = 2
+        self.addChild(enemy)
+        
+        let moveEnemy = SKAction.move(to: endPoint, duration: 1.5)
+        let deleteEnemy = SKAction.removeFromParent()
+        let enemySequence = SKAction.sequence([moveEnemy, deleteEnemy])
+        enemy.run(enemySequence)
+        
+        let diffX = endPoint.x - startPoint.x
+        let diffY = endPoint.y - startPoint.y
+        let amount2Rotate = atan2(diffY, diffX)
+        enemy.zRotation = amount2Rotate
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         BrukItOFF()
+        createOPPS()
+    }
+    
+    func startNewLevel(){
+        
+        let spawn = SKAction.run(createOPPS)
+        let waitToSpawn = SKAction.wait(forDuration: 1)
+        let spawnSequence = SKAction.sequence([spawn, waitToSpawn])
+        let spawnLoop = SKAction.repeatForever(spawnSequence)
+        self.run(spawnLoop)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
