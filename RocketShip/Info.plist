@@ -33,7 +33,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>theboldfont.ttf</string>
-		<string>ADAM.CG PRO.otf</string>
+		<string>ADAM.CGPRO.otf</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
