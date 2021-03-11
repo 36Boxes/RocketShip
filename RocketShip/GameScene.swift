@@ -21,7 +21,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Adding the player to the scene
     
-    let player = SKSpriteNode(imageNamed: "playerShip")
+    let player = SKSpriteNode(imageNamed: "playersmaller")
     
     enum gameState{
         
@@ -193,7 +193,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
         let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
         
-        let enemy = SKSpriteNode(imageNamed: "enemyShip")
+        let enemy = SKSpriteNode(imageNamed: "enemySmall")
         enemy.name = "OPPBOY"
         enemy.position = startPoint
         enemy.zPosition = 2
