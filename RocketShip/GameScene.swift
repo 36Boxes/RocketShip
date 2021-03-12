@@ -14,6 +14,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var levelNumber = 0
     
+    // These are variables that ensure the flames are shown within their order so the animation  is smoother
+    
+    var flipper = 0
+    var RightFlipper = 0
+    var StraightFlipper = 0
+    
     let ScoreLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
     var lives = 20000
@@ -21,8 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Adding the player to the scene
     
-    let player = SKSpriteNode(imageNamed: "PlayerShip@0.75x")
-    let playerFlames = SKSpriteNode(imageNamed: "Flames1")
+    let player = SKSpriteNode(imageNamed: "RocketFlames")
     
     var FlameTimer : Timer!
     
@@ -93,10 +98,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // We times the height by 0.2 as we want the ship to start 20% up from the bottom
         
         player.position = CGPoint(x: self.size.width/2, y: self.size.height * 0.2)
-        playerFlames.position =  CGPoint(x: self.size.width/2, y: self.size.height * 0.25 - player.size.height)
-        playerFlames.zPosition = 2
+
         player.zPosition = 3
-        self.addChild(playerFlames)
+
         self.addChild(player)
         player.physicsBody = SKPhysicsBody(texture: player.texture!,
                                            size: player.texture!.size())
@@ -120,24 +124,53 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(LivesLabel)
         self.addChild(ScoreLabel)
         
-        FlameTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(UpdateFlameTexture), userInfo: nil, repeats: true)
+        FlameTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(UpdateFlameTexture), userInfo: nil, repeats: true)
         startNewLevel()
         
     }
     
     @objc func UpdateFlameTexture(){
         if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningLeft{
-        playerFlames.texture = SKTexture(imageNamed: "FlameLeft" )
+            
+            if flipper == 0{
+                player.texture = SKTexture(imageNamed: "RocketFlamesL" )
+                flipper = 2
+            }else if flipper == 2{
+                player.texture = SKTexture(imageNamed: "RocketFlamesL2" )
+                flipper = 3
+            }else{
+                player.texture = SKTexture(imageNamed: "RocketFlamesL3")
+                flipper = 0
+            }
+    
         }
         if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningRight{
-        playerFlames.texture = SKTexture(imageNamed: "FlamesRight" )
+            
+            if RightFlipper == 0{
+                player.texture = SKTexture(imageNamed: "RocketFlamesR" )
+                RightFlipper = 2
+            }else if RightFlipper == 2{
+                player.texture = SKTexture(imageNamed: "RocketFlamesR2" )
+                RightFlipper = 3
+            }else{
+                player.texture = SKTexture(imageNamed: "RocketFlamesR3")
+                RightFlipper = 0
+            }
+    
         }
         if CurrentPlayerRocketStatus == PlayerRocketStatus.Straight{
-            let Random = Int.random(in: 1..<5)
-            if Random == 1{playerFlames.texture = SKTexture(imageNamed: "Flames1" )}
-            if Random == 2{playerFlames.texture = SKTexture(imageNamed: "Flames2" )}
-            if Random == 3{playerFlames.texture = SKTexture(imageNamed: "Flames3" )}
-            if Random == 4{playerFlames.texture = SKTexture(imageNamed: "Flames4" )}
+            
+            if StraightFlipper == 0{
+                player.texture = SKTexture(imageNamed: "RocketFlames" )
+                StraightFlipper = 2
+            }else if StraightFlipper == 2{
+                player.texture = SKTexture(imageNamed: "RocketFlamesS2" )
+                StraightFlipper = 3
+            }else{
+                player.texture = SKTexture(imageNamed: "RocketFlamesS3")
+                StraightFlipper = 0
+            }
+    
         }
     }
     
@@ -255,6 +288,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         if currentGameState == gameState.DuringGame{
         ShootBullet()
+            CurrentPlayerRocketStatus = PlayerRocketStatus.Straight
         }
     }
     
@@ -351,15 +385,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             let pointOfTouch = touch.location(in: self)
             let prevoiusTouch = touch.previousLocation(in: self)
-            print(pointOfTouch)
-            print(prevoiusTouch)
             
             let difference = pointOfTouch.x - prevoiusTouch.x
             
             if currentGameState == gameState.DuringGame{
                 if difference < 0 {CurrentPlayerRocketStatus = PlayerRocketStatus.TurningLeft}else{CurrentPlayerRocketStatus = PlayerRocketStatus.TurningRight}
             player.position.x  += difference
-                playerFlames.position.x += difference
             }
             
             if player.position.x >= gameArea.maxX - player.size.width/2{
