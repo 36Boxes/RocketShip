@@ -16,12 +16,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let ScoreLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
-    var lives = 3
+    var lives = 20000
     let LivesLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
     // Adding the player to the scene
     
-    let player = SKSpriteNode(imageNamed: "playersmaller")
+    let player = SKSpriteNode(imageNamed: "PlayerShip@0.75x")
+    let playerFlames = SKSpriteNode(imageNamed: "Flames1")
+    
+    var FlameTimer : Timer!
     
     enum gameState{
         
@@ -43,6 +46,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         static let Enemy: UInt32 = 0b100 // Binary for 4
     }
+    
+    enum PlayerRocketStatus {
+        case TurningLeft
+        case TurningRight
+        case Straight
+    }
+    
+    var CurrentPlayerRocketStatus = PlayerRocketStatus.Straight
     
     
     
@@ -82,9 +93,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // We times the height by 0.2 as we want the ship to start 20% up from the bottom
         
         player.position = CGPoint(x: self.size.width/2, y: self.size.height * 0.2)
-        player.zPosition = 2
+        playerFlames.position =  CGPoint(x: self.size.width/2, y: self.size.height * 0.25 - player.size.height)
+        playerFlames.zPosition = 2
+        player.zPosition = 3
+        self.addChild(playerFlames)
         self.addChild(player)
-        player.physicsBody = SKPhysicsBody(rectangleOf: player.size)
+        player.physicsBody = SKPhysicsBody(texture: player.texture!,
+                                           size: player.texture!.size())
         player.physicsBody!.affectedByGravity = false
         player.physicsBody!.categoryBitMask = PhysicsCatergories.Player
         player.physicsBody!.collisionBitMask = PhysicsCatergories.None
@@ -104,8 +119,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         LivesLabel.zPosition = 100
         self.addChild(LivesLabel)
         self.addChild(ScoreLabel)
+        
+        FlameTimer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(UpdateFlameTexture), userInfo: nil, repeats: true)
         startNewLevel()
         
+    }
+    
+    @objc func UpdateFlameTexture(){
+        if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningLeft{
+        playerFlames.texture = SKTexture(imageNamed: "FlameLeft" )
+        }
+        if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningRight{
+        playerFlames.texture = SKTexture(imageNamed: "FlamesRight" )
+        }
+        if CurrentPlayerRocketStatus == PlayerRocketStatus.Straight{
+            let Random = Int.random(in: 1..<5)
+            if Random == 1{playerFlames.texture = SKTexture(imageNamed: "Flames1" )}
+            if Random == 2{playerFlames.texture = SKTexture(imageNamed: "Flames2" )}
+            if Random == 3{playerFlames.texture = SKTexture(imageNamed: "Flames3" )}
+            if Random == 4{playerFlames.texture = SKTexture(imageNamed: "Flames4" )}
+        }
     }
     
     func loselives(){
@@ -120,6 +153,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if lives == 0{
             gameOver()
         }
+
     }
     
     func addScore(){
@@ -317,11 +351,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             let pointOfTouch = touch.location(in: self)
             let prevoiusTouch = touch.previousLocation(in: self)
+            print(pointOfTouch)
+            print(prevoiusTouch)
             
             let difference = pointOfTouch.x - prevoiusTouch.x
             
             if currentGameState == gameState.DuringGame{
+                if difference < 0 {CurrentPlayerRocketStatus = PlayerRocketStatus.TurningLeft}else{CurrentPlayerRocketStatus = PlayerRocketStatus.TurningRight}
             player.position.x  += difference
+                playerFlames.position.x += difference
             }
             
             if player.position.x >= gameArea.maxX - player.size.width/2{
