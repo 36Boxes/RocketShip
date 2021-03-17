@@ -20,6 +20,7 @@
 		CAD58F5A25F6637700B87D72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAD58F5925F6637700B87D72 /* Assets.xcassets */; };
 		CAD58F6525F6637700B87D72 /* RocketShipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD58F6425F6637700B87D72 /* RocketShipTests.swift */; };
 		CAD58F7025F6637700B87D72 /* RocketShipUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD58F6F25F6637700B87D72 /* RocketShipUITests.swift */; };
+		CAD9A5BE26023CF100EFAEF5 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD9A5BD26023CF100EFAEF5 /* HomeScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		CAD58F6B25F6637700B87D72 /* RocketShipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RocketShipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAD58F6F25F6637700B87D72 /* RocketShipUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RocketShipUITests.swift; sourceTree = "<group>"; };
 		CAD58F7125F6637700B87D72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CAD9A5BD26023CF100EFAEF5 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				CAD58F5925F6637700B87D72 /* Assets.xcassets */,
 				CAD58F5B25F6637700B87D72 /* Info.plist */,
 				CABAE15025F8FF2400FAE5E2 /* GameOverScene.swift */,
+				CAD9A5BD26023CF100EFAEF5 /* HomeScreen.swift */,
 			);
 			path = RocketShip;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CAD58F5325F6637600B87D72 /* GameScene.swift in Sources */,
+				CAD9A5BE26023CF100EFAEF5 /* HomeScreen.swift in Sources */,
 				CAD58F5525F6637600B87D72 /* GameViewController.swift in Sources */,
 				CABAE15125F8FF2400FAE5E2 /* GameOverScene.swift in Sources */,
 				CAD58F4D25F6637600B87D72 /* AppDelegate.swift in Sources */,

@@ -22,6 +22,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let ScoreLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
+    let background = SKSpriteNode(imageNamed: "Level4Back")
+    
     var lives = 20000
     let LivesLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
@@ -50,6 +52,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         static let Bullet: UInt32 = 0b10 //Binary for 2
         
         static let Enemy: UInt32 = 0b100 // Binary for 4
+        
     }
     
     enum PlayerRocketStatus {
@@ -87,7 +90,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Adding the background to the scene
         
-        let background = SKSpriteNode(imageNamed: "background")
         background.size = CGSize (width: frame.maxX, height: frame.maxY)
         background.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
         background.zPosition = 0
@@ -228,6 +230,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.view!.presentScene(destination, transition: myTransition)
     }
     
+
+    
     
     // Fire Bullet function
     
@@ -254,14 +258,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func SpawnEnemy(){
         
-        let randomXStart = CGFloat.random(in: gameArea.minX - 30..<gameArea.maxX + 40)
-        let randomXEnd = CGFloat.random(in: gameArea.minX - 30..<gameArea.maxX + 40)
+        let randomXStart = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        let randomXEnd = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
         
         let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
         let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
-        
-        let enemy = SKSpriteNode(imageNamed: "enemySmall")
-        enemy.name = "OPPBOY"
+        let EnemyDecider = Int.random(in: 1..<3)
+        var enemy = SKSpriteNode(imageNamed: "enemySmall")
+        if EnemyDecider == 1{
+            enemy = SKSpriteNode(imageNamed: "enemySmall")
+            enemy.name = "OPPBOY"
+        }
+        if EnemyDecider == 2{
+            enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
+            enemy.name = "ROID"
+        }
+        if EnemyDecider == 3{}
+
         enemy.position = startPoint
         enemy.zPosition = 2
         enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
@@ -372,11 +385,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Something went wrong with my level numbers")
         }
         
+        ChangeLevelBackgrounds()
+        
         let spawn = SKAction.run(SpawnEnemy)
         let waitToSpawn = SKAction.wait(forDuration: levelDuration)
         let spawnSequence = SKAction.sequence([waitToSpawn, spawn])
         let spawnLoop = SKAction.repeatForever(spawnSequence)
         self.run(spawnLoop, withKey: "SpawningEnemies")
+    }
+    
+    func ChangeLevelBackgrounds(){
+        if levelNumber == 0{
+            background.texture = SKTexture(imageNamed: "Level1Back" )
+        }
+        if levelNumber == 1{
+            background.texture = SKTexture(imageNamed: "Level2Back" )
+        }
+        if levelNumber == 2{
+            background.texture = SKTexture(imageNamed: "Level3Back" )
+        }
+        if levelNumber == 3{
+            background.texture = SKTexture(imageNamed: "Level4Back" )
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
