@@ -22,7 +22,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let ScoreLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
-    let background = SKSpriteNode(imageNamed: "Level4Back")
+    let background = SKSpriteNode(imageNamed: "BackgroundTest")
     
     var lives = 20000
     let LivesLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
@@ -236,12 +236,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Fire Bullet function
     
     func ShootBullet() {
-        let bullet = SKSpriteNode(imageNamed: "bullet")
+        let bullet = SKSpriteNode(imageNamed: "MissileFinished")
         bullet.name = "BullitBang"
         bullet.setScale(1)
         bullet.position = player.position
         bullet.zPosition = 1
-        bullet.physicsBody = SKPhysicsBody(rectangleOf: bullet.size)
+        bullet.physicsBody = SKPhysicsBody(texture: player.texture!,
+                                           size: player.texture!.size())
         bullet.physicsBody!.affectedByGravity = false
         bullet.physicsBody!.categoryBitMask = PhysicsCatergories.Bullet
         bullet.physicsBody!.collisionBitMask = PhysicsCatergories.None
@@ -256,6 +257,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Function for creating enemies
     
+    func DoubleScoreCoin(){
+        let randomXStart = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        let randomXEnd = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        
+        let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
+        let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
+        let enemy = SKSpriteNode(imageNamed: "GoldCoin")
+        enemy.name = "Double"
+        enemy.position = startPoint
+        enemy.zPosition = 2
+        enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+        enemy.physicsBody!.affectedByGravity = false
+        enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
+        enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
+        enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Bullet
+        self.addChild(enemy)
+        
+        let moveEnemy = SKAction.move(to: endPoint, duration: 0.5)
+        let deleteEnemy = SKAction.removeFromParent()
+        let enemySequence = SKAction.sequence([moveEnemy, deleteEnemy])
+        if currentGameState == gameState.DuringGame{
+        enemy.run(enemySequence)
+        }
+        let diffX = endPoint.x - startPoint.x
+        let diffY = endPoint.y - startPoint.y
+        let amount2Rotate = atan2(diffY, diffX)
+        enemy.zRotation = amount2Rotate
+        
+        
+    }
+    
     func SpawnEnemy(){
         
         let randomXStart = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
@@ -266,14 +298,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let EnemyDecider = Int.random(in: 1..<3)
         var enemy = SKSpriteNode(imageNamed: "enemySmall")
         if EnemyDecider == 1{
-            enemy = SKSpriteNode(imageNamed: "enemySmall")
+            enemy = SKSpriteNode(imageNamed: "GoldCoin")
             enemy.name = "OPPBOY"
         }
         if EnemyDecider == 2{
-            enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
+            enemy = SKSpriteNode(imageNamed: "GoldCoin")
             enemy.name = "ROID"
         }
-        if EnemyDecider == 3{}
+        if EnemyDecider == 3{
+            let Lucky = Int.random(in: 1..<20)
+            if Lucky == 19{
+                enemy = SKSpriteNode(imageNamed: "DoubleScore")
+            }
+        }
 
         enemy.position = startPoint
         enemy.zPosition = 2
@@ -385,8 +422,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Something went wrong with my level numbers")
         }
         
-        ChangeLevelBackgrounds()
-        
         let spawn = SKAction.run(SpawnEnemy)
         let waitToSpawn = SKAction.wait(forDuration: levelDuration)
         let spawnSequence = SKAction.sequence([waitToSpawn, spawn])
@@ -394,20 +429,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.run(spawnLoop, withKey: "SpawningEnemies")
     }
     
-    func ChangeLevelBackgrounds(){
-        if levelNumber == 0{
-            background.texture = SKTexture(imageNamed: "Level1Back" )
-        }
-        if levelNumber == 1{
-            background.texture = SKTexture(imageNamed: "Level2Back" )
-        }
-        if levelNumber == 2{
-            background.texture = SKTexture(imageNamed: "Level3Back" )
-        }
-        if levelNumber == 3{
-            background.texture = SKTexture(imageNamed: "Level4Back" )
-        }
-    }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
