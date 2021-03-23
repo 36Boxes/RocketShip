@@ -53,6 +53,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         static let Enemy: UInt32 = 0b100 // Binary for 4
         
+        static let Asteroid: UInt32 = 0b1000 //binary for 8
+        
+        static let DoublePoints: UInt32 = 0b10000
     }
     
     enum PlayerRocketStatus {
@@ -107,6 +110,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.physicsBody = SKPhysicsBody(texture: player.texture!,
                                            size: player.texture!.size())
         player.physicsBody!.affectedByGravity = false
+        player.name = "Player"
         player.physicsBody!.categoryBitMask = PhysicsCatergories.Player
         player.physicsBody!.collisionBitMask = PhysicsCatergories.None
         player.physicsBody!.contactTestBitMask = PhysicsCatergories.Enemy
@@ -296,29 +300,45 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
         let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
         let EnemyDecider = Int.random(in: 1..<3)
-        var enemy = SKSpriteNode(imageNamed: "enemySmall")
-        if EnemyDecider == 1{
-            enemy = SKSpriteNode(imageNamed: "GoldCoin")
-            enemy.name = "OPPBOY"
-        }
-        if EnemyDecider == 2{
-            enemy = SKSpriteNode(imageNamed: "GoldCoin")
-            enemy.name = "ROID"
-        }
-        if EnemyDecider == 3{
-            let Lucky = Int.random(in: 1..<20)
-            if Lucky == 19{
-                enemy = SKSpriteNode(imageNamed: "DoubleScore")
-            }
-        }
-
-        enemy.position = startPoint
-        enemy.zPosition = 2
+//        if EnemyDecider == 1{
+//            enemy = SKSpriteNode(imageNamed: "enemySmall")
+//            enemy.name = "OPPBOY"
+//            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+//            enemy.physicsBody!.affectedByGravity = false
+//            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
+//            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
+//            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
+//        }
+//        if EnemyDecider == 2{
+//            enemy = SKSpriteNode(imageNamed: "GoldCoin")
+//            enemy.name = "ROID"
+//            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+//            enemy.physicsBody!.affectedByGravity = false
+//            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
+//            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
+//            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+//        }
+//        if EnemyDecider == 3{
+//            let Lucky = Int.random(in: 1..<20)
+//            if Lucky == 19{
+//                enemy = SKSpriteNode(imageNamed: "DoubleScore")
+//                enemy.name = "DoubleXP"
+//                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+//                enemy.physicsBody!.affectedByGravity = false
+//                enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
+//                enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
+//                enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+//            }
+//        }
+        let enemy = SKSpriteNode(imageNamed: "enemySmall")
+        enemy.name = "OPPBOY"
         enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
         enemy.physicsBody!.affectedByGravity = false
         enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
         enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
-        enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
+        enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+        enemy.position = startPoint
+        enemy.zPosition = 2
         self.addChild(enemy)
         
         let moveEnemy = SKAction.move(to: endPoint, duration: 1.5)
@@ -387,6 +407,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 body2.node?.removeFromParent()
             }
         }
+        
+        if body1.name == "OPPBOY" && body2.name == "Player"{
+            if body2.node != nil{
+                print("Happened")
+            }
+        }
     }
     
     func Explode(explodeposition: CGPoint){
@@ -417,6 +443,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 2: levelDuration = 0.8
         case 3: levelDuration = 0.6
         case 4: levelDuration = 0.5
+        case 5: levelDuration = 0.3
         default:
             levelDuration = 0.4
             print("Something went wrong with my level numbers")
