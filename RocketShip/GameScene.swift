@@ -33,6 +33,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var FlameTimer : Timer!
     
+    var BoostedTimer : Timer!
+    
+    var counter = 0
+    
     enum gameState{
         
         case PreGame
@@ -47,15 +51,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         static let None: UInt32 = 0
         
-        static let Player: UInt32 = 0b1 //Binary for 1
+        static let Player: UInt32 = 1 //Binary for 1
         
-        static let Bullet: UInt32 = 0b10 //Binary for 2
+        static let Bullet: UInt32 = 2 //Binary for 2
         
-        static let Enemy: UInt32 = 0b100 // Binary for 4
+        static let Enemy: UInt32 = 4 // Binary for 4
         
-        static let Asteroid: UInt32 = 0b1000 //binary for 8
+        static let Asteroid: UInt32 = 8 //binary for 8
         
-        static let DoublePoints: UInt32 = 0b10000
+        static let DoublePoints: UInt32 = 16
+        
+        static let GoldCoin: UInt32 = 32
     }
     
     enum PlayerRocketStatus {
@@ -64,7 +70,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case Straight
     }
     
+    enum RocketMode {
+        case Boosted
+        case Normal
+        case DoubleXP
+    }
+    
     var CurrentPlayerRocketStatus = PlayerRocketStatus.Straight
+    var CurrentRocketMode = RocketMode.Normal
     
     
     
@@ -136,47 +149,97 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func UpdateFlameTexture(){
-        if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningLeft{
-            
-            if flipper == 0{
-                player.texture = SKTexture(imageNamed: "RocketFlamesL" )
-                flipper = 2
-            }else if flipper == 2{
-                player.texture = SKTexture(imageNamed: "RocketFlamesL2" )
-                flipper = 3
-            }else{
-                player.texture = SKTexture(imageNamed: "RocketFlamesL3")
-                flipper = 0
+        
+        if CurrentRocketMode == RocketMode.Normal{
+            if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningLeft{
+                
+                if flipper == 0{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesL" )
+                    flipper = 2
+                }else if flipper == 2{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesL2" )
+                    flipper = 3
+                }else{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesL3")
+                    flipper = 0
+                }
+        
             }
-    
-        }
-        if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningRight{
-            
-            if RightFlipper == 0{
-                player.texture = SKTexture(imageNamed: "RocketFlamesR" )
-                RightFlipper = 2
-            }else if RightFlipper == 2{
-                player.texture = SKTexture(imageNamed: "RocketFlamesR2" )
-                RightFlipper = 3
-            }else{
-                player.texture = SKTexture(imageNamed: "RocketFlamesR3")
-                RightFlipper = 0
+            if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningRight{
+                
+                if RightFlipper == 0{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesR" )
+                    RightFlipper = 2
+                }else if RightFlipper == 2{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesR2" )
+                    RightFlipper = 3
+                }else{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesR3")
+                    RightFlipper = 0
+                }
+        
             }
-    
+            if CurrentPlayerRocketStatus == PlayerRocketStatus.Straight{
+                
+                if StraightFlipper == 0{
+                    player.texture = SKTexture(imageNamed: "RocketFlames" )
+                    StraightFlipper = 2
+                }else if StraightFlipper == 2{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesS2" )
+                    StraightFlipper = 3
+                }else{
+                    player.texture = SKTexture(imageNamed: "RocketFlamesS3")
+                    StraightFlipper = 0
+                }
+        
+            }
         }
-        if CurrentPlayerRocketStatus == PlayerRocketStatus.Straight{
             
+        if CurrentRocketMode == RocketMode.Boosted{
+            counter -= 1
+            if counter < 0{ CurrentRocketMode = RocketMode.Normal}
+            if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningLeft{
+                
+                if flipper == 0{
+                    player.texture = SKTexture(imageNamed: "BlueFlameL1" )
+                    flipper = 2
+                }else if flipper == 2{
+                    player.texture = SKTexture(imageNamed: "BlueFlameL2" )
+                    flipper = 3
+                }else{
+                    player.texture = SKTexture(imageNamed: "BlueFlameL1")
+                    flipper = 0
+                }
+            
+            }
+            if CurrentPlayerRocketStatus == PlayerRocketStatus.TurningRight{
+                    
+                if RightFlipper == 0{
+                    player.texture = SKTexture(imageNamed: "BlueFlameR1" )
+                    RightFlipper = 2
+                }else if RightFlipper == 2{
+                    player.texture = SKTexture(imageNamed: "BlueFlameR2" )
+                    RightFlipper = 3
+                }else{
+                    player.texture = SKTexture(imageNamed: "BlueFlameR1")
+                    RightFlipper = 0
+                }
+        
+            }
+            if CurrentPlayerRocketStatus == PlayerRocketStatus.Straight{
+                
             if StraightFlipper == 0{
-                player.texture = SKTexture(imageNamed: "RocketFlames" )
-                StraightFlipper = 2
-            }else if StraightFlipper == 2{
-                player.texture = SKTexture(imageNamed: "RocketFlamesS2" )
-                StraightFlipper = 3
-            }else{
-                player.texture = SKTexture(imageNamed: "RocketFlamesS3")
-                StraightFlipper = 0
+                    player.texture = SKTexture(imageNamed: "BlueFlameS1" )
+                    StraightFlipper = 2
+                }else if StraightFlipper == 2{
+                    player.texture = SKTexture(imageNamed: "BlueFlameS2" )
+                    StraightFlipper = 3
+                }else{
+                    player.texture = SKTexture(imageNamed: "BlueFlameS1")
+                    StraightFlipper = 0
+                }
+        
             }
-    
         }
     }
     
@@ -300,43 +363,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
         let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
         let EnemyDecider = Int.random(in: 1..<3)
-//        if EnemyDecider == 1{
-//            enemy = SKSpriteNode(imageNamed: "enemySmall")
-//            enemy.name = "OPPBOY"
-//            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
-//            enemy.physicsBody!.affectedByGravity = false
-//            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
-//            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
-//            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
-//        }
-//        if EnemyDecider == 2{
-//            enemy = SKSpriteNode(imageNamed: "GoldCoin")
-//            enemy.name = "ROID"
-//            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
-//            enemy.physicsBody!.affectedByGravity = false
-//            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
-//            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
-//            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
-//        }
-//        if EnemyDecider == 3{
-//            let Lucky = Int.random(in: 1..<20)
-//            if Lucky == 19{
-//                enemy = SKSpriteNode(imageNamed: "DoubleScore")
-//                enemy.name = "DoubleXP"
-//                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
-//                enemy.physicsBody!.affectedByGravity = false
-//                enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
-//                enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
-//                enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
-//            }
-//        }
-        let enemy = SKSpriteNode(imageNamed: "enemySmall")
-        enemy.name = "OPPBOY"
-        enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
-        enemy.physicsBody!.affectedByGravity = false
-        enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
-        enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
-        enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+        var enemy : SKSpriteNode!
+        if EnemyDecider == 1{
+            enemy = SKSpriteNode(imageNamed: "enemySmall")
+            enemy.name = "OPPBOY"
+            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody!.affectedByGravity = false
+            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
+            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
+        }
+        if EnemyDecider == 2{
+            enemy = SKSpriteNode(imageNamed: "GoldCoin")
+            enemy.name = "ROID"
+            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody!.affectedByGravity = false
+            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.GoldCoin
+            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+        }
+        if EnemyDecider == 3{
+            let Lucky = Int.random(in: 1..<20)
+            if Lucky == 19{
+                enemy = SKSpriteNode(imageNamed: "DoubleScore")
+                enemy.name = "DoubleXP"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+                enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
+                enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
+                enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+            }
+        }
+       
         enemy.position = startPoint
         enemy.zPosition = 2
         self.addChild(enemy)
@@ -379,7 +437,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // If the player hits the enemy
         
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Enemy{
-            
+            if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            }
+            else{
             if body1.node != nil{Explode(explodeposition: body1.node!.position)}
             if body2.node != nil{Explode(explodeposition: body2.node!.position)}
 
@@ -387,7 +448,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             body2.node?.removeFromParent()
             
             gameOver()
+            }
 
+            
+        }
+        
+        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
+            
+            // Since we hit the gold coin we want to give a bonus life and invunerable travel travel
+            // My thought process is to call a 30 second timer in which we set the rocketmode to boosted.
+            
+            CurrentRocketMode = RocketMode.Boosted
+            counter = 50
             
         }
         
@@ -408,10 +480,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        if body1.name == "OPPBOY" && body2.name == "Player"{
-            if body2.node != nil{
-                print("Happened")
-            }
+        if body1.node?.name == "OPPBOY" && body2.node?.name == "Player"{
+            print("hrreeere")
+        }
+    }
+    
+    @objc func BoostedCountdown(){
+        print(counter)
+        if counter > 0{
+            counter -= 1
+            CurrentRocketMode = RocketMode.Boosted
+        }
+        else{
+            BoostedTimer.invalidate()
+            BoostedTimer = nil
+            CurrentRocketMode = RocketMode.Normal
         }
     }
     
