@@ -264,9 +264,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         userScore += 1
         ScoreLabel.text = "Score: \(userScore)"
         
-        if userScore == 25 || userScore == 50 || userScore == 100{
-            startNewLevel()
-        }
     }
     
     func AddBonus(){
@@ -396,8 +393,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
                 enemy.physicsBody!.affectedByGravity = false
                 enemy.physicsBody!.categoryBitMask = PhysicsCatergories.GoldCoin
-                enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
-                enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+                enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+                enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
             }
             else{
                 enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
@@ -463,6 +460,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Enemy{
             if CurrentRocketMode == RocketMode.Boosted{
                 if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                addScore()
             }
             else{
             if body1.node != nil{Explode(explodeposition: body1.node!.position)}
@@ -487,19 +485,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             CurrentRocketMode = RocketMode.Boosted
             counter = 50
             AddBonus()
+            body2.node?.removeFromParent()
             
         }
         
         // If the bullet hits the gold coin
         
         if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
-            
             if body2.node != nil{
                 
                 if body2.node!.position.y > self.size.height{
                     return
                 }else{
-                    Explode(explodeposition: body2.node!.position)
+                    Explodecoin(explodeposition: body2.node!.position)
                     body2.node?.removeFromParent()
                 }
         }
@@ -539,21 +537,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Asteroid{
+            if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                addScore()
+            }else{
             if body1.node != nil{Explode(explodeposition: body1.node!.position)}
             if body2.node != nil{Explode(explodeposition: body2.node!.position)}
 
             body1.node?.removeFromParent()
             body2.node?.removeFromParent()
             gameOver()
+                
+            }
             
         }
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.AsteroidFragment{
+            if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                addScore()
+            }else{
             if body1.node != nil{Explode(explodeposition: body1.node!.position)}
             if body2.node != nil{Explode(explodeposition: body2.node!.position)}
 
             body1.node?.removeFromParent()
             body2.node?.removeFromParent()
             gameOver()
+            }
         }
     }
     
