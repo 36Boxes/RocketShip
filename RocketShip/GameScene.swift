@@ -62,6 +62,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         static let DoublePoints: UInt32 = 16
         
         static let GoldCoin: UInt32 = 32
+        
+        static let AsteroidFragment: UInt32 = 64
     }
     
     enum PlayerRocketStatus {
@@ -366,7 +368,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
         let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
-        let EnemyDecider = Int.random(in: 1..<3)
+        let EnemyDecider = Int.random(in: 1..<4)
         var enemy : SKSpriteNode!
         if EnemyDecider == 1{
             enemy = SKSpriteNode(imageNamed: "enemySmall")
@@ -387,15 +389,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
         }
         if EnemyDecider == 3{
-            let Lucky = Int.random(in: 1..<20)
-            if Lucky == 19{
+            let Lucky = Int.random(in: 1..<3)
+            if Lucky == 2{
                 enemy = SKSpriteNode(imageNamed: "GoldCoin")
                 enemy.name = "DoubleXP"
                 enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
                 enemy.physicsBody!.affectedByGravity = false
-                enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
+                enemy.physicsBody!.categoryBitMask = PhysicsCatergories.GoldCoin
                 enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy
                 enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+            }
+            else{
+                enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
+                enemy.name = "ROID"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+                enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Asteroid
+                enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+                enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
             }
         }
        
@@ -518,13 +529,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     return
                 }else{
                     let startofFragmentation = body2.node!.position
+                    Explode(explodeposition: body2.node!.position)
                     
+                    FragmentAsteroid(FragPosition: startofFragmentation)
+                    body1.node?.removeFromParent()
+                    body2.node?.removeFromParent()
                 }
             }
         }
         
-        if body1.node?.name == "OPPBOY" && body2.node?.name == "Player"{
-            print("hrreeere")
+        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Asteroid{
+            if body1.node != nil{Explode(explodeposition: body1.node!.position)}
+            if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+
+            body1.node?.removeFromParent()
+            body2.node?.removeFromParent()
+            gameOver()
+            
+        }
+        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.AsteroidFragment{
+            if body1.node != nil{Explode(explodeposition: body1.node!.position)}
+            if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+
+            body1.node?.removeFromParent()
+            body2.node?.removeFromParent()
+            gameOver()
         }
     }
     
@@ -564,6 +593,79 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let remove = SKAction.removeFromParent()
         let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
         explosion.run(explosionSequence)
+    }
+    func Exploderoid(explodeposition: CGPoint){
+        let explosion = SKSpriteNode(imageNamed: "Explosion2")
+        explosion.position = explodeposition
+        explosion.zPosition = 3
+        explosion.setScale(0)
+        self.addChild(explosion)
+        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
+        let fade = SKAction.fadeOut(withDuration: 0.1)
+        let remove = SKAction.removeFromParent()
+        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
+        explosion.run(explosionSequence)
+    }
+    func FragmentAsteroid(FragPosition: CGPoint){
+        let startPoint = FragPosition
+        let randomXEnd = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        let randomXEnd2 = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        let randomXEnd3 = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
+        let endPoint2 = CGPoint(x: randomXEnd2, y: -self.size.height * 0.2)
+        let endPoint3 = CGPoint(x: randomXEnd3, y: -self.size.height * 0.2)
+        let enemy1 : SKSpriteNode
+        enemy1 = SKSpriteNode(imageNamed: "Asteroidfrag")
+        enemy1.name = "ROID"
+        enemy1.physicsBody = SKPhysicsBody(rectangleOf: enemy1.size)
+        enemy1.physicsBody!.affectedByGravity = false
+        enemy1.physicsBody!.categoryBitMask = PhysicsCatergories.AsteroidFragment
+        enemy1.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+        enemy1.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
+        enemy1.position = startPoint
+        enemy1.zPosition = 2
+        self.addChild(enemy1)
+        let enemy2 : SKSpriteNode
+        enemy2 = SKSpriteNode(imageNamed: "AsteroidFrag2")
+        enemy2.name = "ROID"
+        enemy2.physicsBody = SKPhysicsBody(rectangleOf: enemy2.size)
+        enemy2.physicsBody!.affectedByGravity = false
+        enemy2.physicsBody!.categoryBitMask = PhysicsCatergories.AsteroidFragment
+        enemy2.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+        enemy2.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
+        enemy2.position = startPoint
+        enemy2.zPosition = 2
+        self.addChild(enemy2)
+        let enemy3 : SKSpriteNode
+        enemy3 = SKSpriteNode(imageNamed: "asteroidfrag3")
+        enemy3.name = "ROID"
+        enemy3.physicsBody = SKPhysicsBody(rectangleOf: enemy3.size)
+        enemy3.physicsBody!.affectedByGravity = false
+        enemy3.physicsBody!.categoryBitMask = PhysicsCatergories.AsteroidFragment
+        enemy3.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+        enemy3.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
+        enemy3.position = startPoint
+        enemy3.zPosition = 2
+        self.addChild(enemy3)
+
+        
+        
+        let moveEnemy = SKAction.move(to: endPoint, duration: 1.5)
+        let moveEnemy2 = SKAction.move(to: endPoint2, duration: 1.5)
+        let moveEnemy3 = SKAction.move(to: endPoint3, duration: 1.5)
+        let deleteEnemy = SKAction.removeFromParent()
+        let enemySequence = SKAction.sequence([moveEnemy, deleteEnemy])
+        let enemySequence2 = SKAction.sequence([moveEnemy2, deleteEnemy])
+        let enemySequence3 = SKAction.sequence([moveEnemy3, deleteEnemy])
+        
+        if currentGameState == gameState.DuringGame{
+            enemy1.run(enemySequence)
+            enemy2.run(enemySequence2)
+            enemy3.run(enemySequence3)
+
+        }
+        
+        
     }
     
     
