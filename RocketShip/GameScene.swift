@@ -259,13 +259,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func addScore(){
-        
         userScore += 1
         ScoreLabel.text = "Score: \(userScore)"
         
-        if userScore == 10 || userScore == 25 || userScore == 50{
+        if userScore == 25 || userScore == 50 || userScore == 100{
             startNewLevel()
         }
+    }
+    
+    func AddBonus(){
+        userScore += 2
+        ScoreLabel.text = "Score: \(userScore)"
     }
     
     func gameOver(){
@@ -374,18 +378,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
         }
         if EnemyDecider == 2{
-            enemy = SKSpriteNode(imageNamed: "GoldCoin")
+            enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
             enemy.name = "ROID"
             enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
             enemy.physicsBody!.affectedByGravity = false
-            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.GoldCoin
+            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Asteroid
             enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
-            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player
+            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
         }
         if EnemyDecider == 3{
             let Lucky = Int.random(in: 1..<20)
             if Lucky == 19{
-                enemy = SKSpriteNode(imageNamed: "DoubleScore")
+                enemy = SKSpriteNode(imageNamed: "GoldCoin")
                 enemy.name = "DoubleXP"
                 enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
                 enemy.physicsBody!.affectedByGravity = false
@@ -403,8 +407,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let deleteEnemy = SKAction.removeFromParent()
         let wellDoneSoldier = SKAction.run(loselives)
         let enemySequence = SKAction.sequence([moveEnemy, deleteEnemy, wellDoneSoldier])
+        let coinSequence = SKAction.sequence([moveEnemy, deleteEnemy])
         if currentGameState == gameState.DuringGame{
-        enemy.run(enemySequence)
+            
+            // We do this as only the enemy ships should take lives off the player
+            
+            if enemy.name == "OPPBOY"{
+                enemy.run(enemySequence)
+            }
+            else{
+                enemy.run(coinSequence)
+            }
         }
         let diffX = endPoint.x - startPoint.x
         let diffY = endPoint.y - startPoint.y
@@ -453,6 +466,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         
+        // If the player runs into the gold coin
+        
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
             
             // Since we hit the gold coin we want to give a bonus life and invunerable travel travel
@@ -460,7 +475,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             CurrentRocketMode = RocketMode.Boosted
             counter = 50
+            AddBonus()
             
+        }
+        
+        // If the bullet hits the gold coin
+        
+        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
+            
+            if body2.node != nil{
+                
+                if body2.node!.position.y > self.size.height{
+                    return
+                }else{
+                    Explode(explodeposition: body2.node!.position)
+                    body2.node?.removeFromParent()
+                }
+        }
         }
         
         // If the bullet hits the enemy
@@ -477,6 +508,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
                 body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
+            }
+        }
+        
+        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.Asteroid{
+            if body2.node != nil{
+                // Check wether the enemy is on screen when the bullet makes contact
+                if body2.node!.position.y > self.size.height{
+                    return
+                }else{
+                    let startofFragmentation = body2.node!.position
+                    
+                }
             }
         }
         
@@ -499,6 +542,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func Explode(explodeposition: CGPoint){
+        let explosion = SKSpriteNode(imageNamed: "Explosionred")
+        explosion.position = explodeposition
+        explosion.zPosition = 3
+        explosion.setScale(0)
+        self.addChild(explosion)
+        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
+        let fade = SKAction.fadeOut(withDuration: 0.1)
+        let remove = SKAction.removeFromParent()
+        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
+        explosion.run(explosionSequence)
+    }
+    func Explodecoin(explodeposition: CGPoint){
         let explosion = SKSpriteNode(imageNamed: "explosion")
         explosion.position = explodeposition
         explosion.zPosition = 3
@@ -510,6 +565,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
         explosion.run(explosionSequence)
     }
+    
+    
     
     func startNewLevel(){
         
