@@ -44,6 +44,15 @@ class RocketShipHomeScreen: SKScene{
         GameStart.name = "StartButton"
         self.addChild(GameStart)
         
+        
+        let Leaderboards = SKLabelNode(fontNamed: "ADAM.CGPRO")
+        Leaderboards.text = "Leaderboards"
+        Leaderboards.fontSize = 70
+        Leaderboards.fontColor = SKColor.white
+        Leaderboards.position = CGPoint(x: self.size.width/2, y: self.size.height * 0.2)
+        Leaderboards.zPosition = 1
+        Leaderboards.name = "Leaderboards"
+        self.addChild(Leaderboards)
         BackgroundAnimation = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(UpdateBackgroundTexture), userInfo: nil, repeats: true)
         
     }
@@ -144,8 +153,22 @@ class RocketShipHomeScreen: SKScene{
                 let myTransition = SKTransition.fade(withDuration: 0.4)
                 self.view!.presentScene(destination, transition: myTransition)
             }
+            
+            if nodeTapped.name == "Leaderboards"{
+                moveToUIViewController(storyBoardId: "leaderboard")
+            }
         }
+    }
+    
+    fileprivate func moveToUIViewController(storyBoardId: String) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: storyBoardId)
+        vc.view.frame = self.frame
+        vc.view.layoutIfNeeded()
+
+        self.view?.window?.rootViewController?.present(vc, animated: true, completion: nil)
     }
     
     
 }
+

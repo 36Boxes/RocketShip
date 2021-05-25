@@ -10,12 +10,15 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
+    
 
+
+    
     override func viewDidLoad() {
            
    super.viewDidLoad()
-           
-           if let view = self.view as! SKView? {
+
+        if let view = self.view as! SKView? {
 
                // Load the SKScene from 'GameScene.sks'
 
@@ -31,10 +34,13 @@ class GameViewController: UIViewController {
                
                view.ignoresSiblingOrder = true
                
-               view.showsFPS = true
+               view.showsFPS = false
 
-               view.showsNodeCount = true
+               view.showsNodeCount = false
+            
            }
+        
+        
 
        }
 

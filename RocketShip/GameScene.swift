@@ -26,7 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let background = SKSpriteNode(imageNamed: "glitter-universe-1-1")
     var ticker = 0
     
-    var lives = 20000
+    var lives = 3
     let LivesLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
     // Adding the player to the scene
@@ -91,7 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override init(size: CGSize){
         
         // to have this work nicely on most devices i could maybe identify the device and then have the correct aspect ratio
-        let maxAspectRatio: CGFloat = 13/6
+        let maxAspectRatio: CGFloat = 1.9
         let gameAreaWidth = size.height / maxAspectRatio
         let margin = (size.width - gameAreaWidth) / 2
         gameArea = CGRect(x: margin, y: 0, width: gameAreaWidth, height: size.height)
@@ -550,6 +550,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Enemy{
             if CurrentRocketMode == RocketMode.Boosted{
                 if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                body2.node?.removeFromParent()
                 addScore()
             }
             else{
