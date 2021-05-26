@@ -37,7 +37,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BackgroundTest" translatesAutoresizingMaskIntoConstraints="NO" id="bqK-UW-HpL">
-                                <rect key="frame" x="-603" y="-992" width="1620" height="2880"/>
+                                <rect key="frame" x="-193" y="-252" width="800" height="1400"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="800" id="EaH-lH-r8E"/>
+                                    <constraint firstAttribute="height" constant="1400" id="cn4-pI-UHR"/>
+                                </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Leaderboard" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeh-SB-VZX">
                                 <rect key="frame" x="20" y="73" width="374" height="59"/>
@@ -45,10 +49,15 @@
                                     <constraint firstAttribute="height" constant="59" id="7w4-De-7Xk"/>
                                     <constraint firstAttribute="width" constant="374" id="G6v-lZ-d6g"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="49"/>
+                                <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="27"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mpq-Se-H6F">
+                                <rect key="frame" x="20" y="140" width="374" height="722"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="JAd-Kc-hq1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>

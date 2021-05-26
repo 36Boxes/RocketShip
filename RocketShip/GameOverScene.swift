@@ -7,6 +7,8 @@
 
 import Foundation
 import SpriteKit
+import GameKit
+
 
 class GameOverScene: SKScene{
     
@@ -61,6 +63,7 @@ class GameOverScene: SKScene{
         if NewHighScore == true{
             HighScoreLabel.text = "New High Score! : \(highscore)"
             HighScoreLabel.fontSize = 70
+            saveHigh(number: userScore)
         }else{
             HighScoreLabel.text = "High Score: \(highscore)"
             HighScoreLabel.fontSize = 100
@@ -79,6 +82,15 @@ class GameOverScene: SKScene{
         
         
     }
+    
+    func saveHigh(number : Int){
+        if GKLocalPlayer.local.isAuthenticated{
+            let scoreReporter = GKScore(leaderboardIdentifier: "HighScores")
+            scoreReporter.value = Int64(number)
+            let ScoreArray : [GKScore] = [scoreReporter]
+            GKScore.report(ScoreArray, withCompletionHandler: nil)
+
+        }}
     
     @objc func UpdateBackgroundTexture(){
         print(ticker)
