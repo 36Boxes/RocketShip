@@ -154,7 +154,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func UpdateBackgroundTexture(){
-        print(ticker)
         if ticker == 0 {
             background.texture = SKTexture(imageNamed: "glitter-universe-1-1" )
             ticker = 1

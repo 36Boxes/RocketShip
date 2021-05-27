@@ -7,13 +7,22 @@
 
 import Foundation
 import SpriteKit
+import GameKit
 
 
-class RocketShipHomeScreen: SKScene{
+class RocketShipHomeScreen: SKScene , GKGameCenterControllerDelegate{
+    
+    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+        gameCenterViewController.dismiss(animated: true, completion: nil)
+    }
+    
     
     var BackgroundAnimation: Timer!
     let background = SKSpriteNode(imageNamed: "glitter-universe-1-1")
     var ticker = 0
+    let localPlayer = GKLocalPlayer.local
+    var GameCenterPlayer = true
+
 
     
     override func didMove(to view: SKView) {
@@ -54,11 +63,11 @@ class RocketShipHomeScreen: SKScene{
         Leaderboards.name = "Leaderboards"
         self.addChild(Leaderboards)
         BackgroundAnimation = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(UpdateBackgroundTexture), userInfo: nil, repeats: true)
+        authPlayer()
         
     }
     
     @objc func UpdateBackgroundTexture(){
-        print(ticker)
         if ticker == 0 {
             background.texture = SKTexture(imageNamed: "glitter-universe-1-1" )
             ticker = 1
@@ -168,6 +177,16 @@ class RocketShipHomeScreen: SKScene{
 
         self.view?.window?.rootViewController?.present(vc, animated: true, completion: nil)
     }
+    
+    func authPlayer(){
+        localPlayer.authenticateHandler = {
+            (view, Error) in
+            // if they accept show the view
+            if view != nil {self.view?.window?.rootViewController?.present(view!, animated: true, completion: nil)}
+            // if they dont dont show view and log they are not in gamecenter
+            else {self.GameCenterPlayer = false}
+        }}
+
     
     
 }

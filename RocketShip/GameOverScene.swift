@@ -85,7 +85,7 @@ class GameOverScene: SKScene{
     
     func saveHigh(number : Int){
         if GKLocalPlayer.local.isAuthenticated{
-            let scoreReporter = GKScore(leaderboardIdentifier: "HighScores")
+            let scoreReporter = GKScore(leaderboardIdentifier: "IR_Scores")
             scoreReporter.value = Int64(number)
             let ScoreArray : [GKScore] = [scoreReporter]
             GKScore.report(ScoreArray, withCompletionHandler: nil)
@@ -93,7 +93,6 @@ class GameOverScene: SKScene{
         }}
     
     @objc func UpdateBackgroundTexture(){
-        print(ticker)
         if ticker == 0 {
             background.texture = SKTexture(imageNamed: "glitter-universe-1-1" )
             ticker = 1
