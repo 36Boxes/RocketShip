@@ -35,8 +35,8 @@ class RocketShipHomeScreen: SKScene , GKGameCenterControllerDelegate{
         self.addChild(background)
         
         let GameName = SKLabelNode(fontNamed: "ADAM.CGPRO")
-        GameName.text = "Rocket Ship"
-        GameName.fontSize = 114
+        GameName.text = "Interstellar Raider"
+        GameName.fontSize = 80
         GameName.fontColor = SKColor.white
         GameName.position = CGPoint(x: self.size.width/2, y: self.size.height * 0.7)
         GameName.zPosition = 1
