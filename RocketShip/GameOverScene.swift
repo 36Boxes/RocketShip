@@ -15,6 +15,7 @@ class GameOverScene: SKScene{
     var NewHighScore = Bool()
     
     let restartLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
+    let homelabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
 
     
     var BackgroundAnimation: Timer!
@@ -74,10 +75,16 @@ class GameOverScene: SKScene{
         self.addChild(HighScoreLabel)
         
         restartLabel.text = "Restart"
-        restartLabel.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * 0.3)
+        restartLabel.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * 0.4)
         restartLabel.zPosition = 1
         restartLabel.fontSize = 70
         self.addChild(restartLabel)
+        
+        homelabel.text = "Go Home"
+        homelabel.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * 0.2)
+        homelabel.zPosition = 1
+        homelabel.fontSize = 70
+        self.addChild(homelabel)
         
         
         
@@ -183,6 +190,13 @@ class GameOverScene: SKScene{
             
             if restartLabel.contains(pointTouched){
                 let destination = GameScene(size: self.size)
+                destination.scaleMode = self.scaleMode
+                let transition = SKTransition.fade(withDuration: 0.5)
+                self.view!.presentScene(destination, transition: transition)
+            }
+            
+            if homelabel.contains(pointTouched){
+                let destination = RocketShipHomeScreen(size: self.size)
                 destination.scaleMode = self.scaleMode
                 let transition = SKTransition.fade(withDuration: 0.5)
                 self.view!.presentScene(destination, transition: transition)

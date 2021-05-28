@@ -22,28 +22,7 @@ class LeaderboardViewController: UIViewController, GKGameCenterControllerDelegat
     }
     
     @IBAction func reload(_ sender: Any) {
-        if let view = self.view as! SKView? {
-
-               // Load the SKScene from 'GameScene.sks'
-
-               let scene = RocketShipHomeScreen(size: CGSize(width: 1536, height: 2048))
-
-                   // Set the scale mode to scale to fit the window
-
-                   scene.scaleMode = .aspectFill
-                   
-                   // Present the scene
-
-                   view.presentScene(scene)
-               
-               view.ignoresSiblingOrder = true
-               
-               view.showsFPS = false
-
-               view.showsNodeCount = false
-            
-        
-    }
+        tableView.reloadData()
     }
         
         
@@ -72,12 +51,13 @@ class LeaderboardViewController: UIViewController, GKGameCenterControllerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        authPlayer()
-        let nib = UINib(nibName: "LeadboardCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: "LeadboardCell")
+        let nib = UINib(nibName: "LeaderboardCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "LeaderboardCell")
         tableView.delegate = self
         tableView.dataSource = self
+        // Do any additional setup after loading the view, typically from a nib.
+        authPlayer()
+        
         load_leaderboards()
         showLeader()
     }

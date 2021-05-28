@@ -31,8 +31,8 @@
         <!--Leaderboard View Controller-->
         <scene sceneID="QjU-fR-sdQ">
             <objects>
-                <viewController storyboardIdentifier="leaderboard" modalPresentationStyle="fullScreen" id="8bB-75-JZa" customClass="LeaderboardViewController" customModule="RocketShip" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="A5h-sp-Ibp">
+                <viewController storyboardIdentifier="leaderboard" id="8bB-75-JZa" customClass="LeaderboardViewController" customModule="RocketShip" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="A5h-sp-Ibp" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -53,15 +53,15 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RUP-oZ-ON9">
-                                <rect key="frame" x="55" y="140" width="304" height="692"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RUP-oZ-ON9">
+                                <rect key="frame" x="55" y="220" width="304" height="612"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E8h-Dq-JPf">
                                 <rect key="frame" x="55" y="140" width="304" height="32"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="17"/>
-                                <state key="normal" title="Go Back">
+                                <state key="normal" title="Load Leaderboard">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -72,7 +72,7 @@
                                 <rect key="frame" x="55" y="180" width="304" height="32"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="17"/>
-                                <state key="normal" title="Show Leaderboard">
+                                <state key="normal" title="Game Center Leaderboard">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -83,20 +83,21 @@
                         <viewLayoutGuide key="safeArea" id="JAd-Kc-hq1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="RUP-oZ-ON9" firstAttribute="centerX" secondItem="A5h-sp-Ibp" secondAttribute="centerX" id="1wD-Dq-b4G"/>
+                            <constraint firstItem="JAd-Kc-hq1" firstAttribute="bottom" secondItem="RUP-oZ-ON9" secondAttribute="bottom" constant="30" id="2Fl-2f-HE9"/>
+                            <constraint firstItem="RUP-oZ-ON9" firstAttribute="leading" secondItem="JAd-Kc-hq1" secondAttribute="leading" constant="55" id="2Yu-6D-dgE"/>
                             <constraint firstItem="E8h-Dq-JPf" firstAttribute="leading" secondItem="JAd-Kc-hq1" secondAttribute="leading" constant="55" id="7XE-2x-2kd"/>
                             <constraint firstItem="bqK-UW-HpL" firstAttribute="centerX" secondItem="A5h-sp-Ibp" secondAttribute="centerX" id="9V2-sf-yUJ"/>
                             <constraint firstItem="JAd-Kc-hq1" firstAttribute="trailing" secondItem="17Y-BL-NHh" secondAttribute="trailing" constant="55" id="B3E-V9-jhq"/>
                             <constraint firstItem="17Y-BL-NHh" firstAttribute="leading" secondItem="JAd-Kc-hq1" secondAttribute="leading" constant="55" id="KEV-JJ-MxO"/>
-                            <constraint firstItem="JAd-Kc-hq1" firstAttribute="trailing" secondItem="RUP-oZ-ON9" secondAttribute="trailing" constant="55" id="LWO-at-0OL"/>
                             <constraint firstItem="17Y-BL-NHh" firstAttribute="centerX" secondItem="A5h-sp-Ibp" secondAttribute="centerX" id="LqJ-fF-4lk"/>
                             <constraint firstItem="E8h-Dq-JPf" firstAttribute="top" secondItem="eeh-SB-VZX" secondAttribute="bottom" constant="8" symbolic="YES" id="NKL-bo-YKJ"/>
                             <constraint firstItem="bqK-UW-HpL" firstAttribute="centerY" secondItem="A5h-sp-Ibp" secondAttribute="centerY" id="PrE-QG-SYC"/>
                             <constraint firstItem="eeh-SB-VZX" firstAttribute="centerX" secondItem="A5h-sp-Ibp" secondAttribute="centerX" id="U7N-qI-TcM"/>
-                            <constraint firstItem="RUP-oZ-ON9" firstAttribute="centerX" secondItem="A5h-sp-Ibp" secondAttribute="centerX" id="ZCK-MY-guc"/>
-                            <constraint firstItem="JAd-Kc-hq1" firstAttribute="bottom" secondItem="RUP-oZ-ON9" secondAttribute="bottom" constant="30" id="ZgY-Be-6dK"/>
+                            <constraint firstItem="RUP-oZ-ON9" firstAttribute="top" secondItem="17Y-BL-NHh" secondAttribute="bottom" constant="8" symbolic="YES" id="UYP-aj-2XD"/>
                             <constraint firstItem="E8h-Dq-JPf" firstAttribute="centerX" secondItem="A5h-sp-Ibp" secondAttribute="centerX" id="aZl-aY-eeU"/>
-                            <constraint firstItem="RUP-oZ-ON9" firstAttribute="leading" secondItem="JAd-Kc-hq1" secondAttribute="leading" constant="55" id="hJS-T2-RWh"/>
                             <constraint firstItem="JAd-Kc-hq1" firstAttribute="trailing" secondItem="E8h-Dq-JPf" secondAttribute="trailing" constant="55" id="i9n-Dy-7CN"/>
+                            <constraint firstItem="JAd-Kc-hq1" firstAttribute="trailing" secondItem="RUP-oZ-ON9" secondAttribute="trailing" constant="55" id="k9W-0U-scX"/>
                             <constraint firstItem="eeh-SB-VZX" firstAttribute="top" secondItem="JAd-Kc-hq1" secondAttribute="top" constant="29" id="ocq-nz-aDa"/>
                             <constraint firstItem="17Y-BL-NHh" firstAttribute="top" secondItem="E8h-Dq-JPf" secondAttribute="bottom" constant="8" symbolic="YES" id="oiB-iO-KOd"/>
                         </constraints>
