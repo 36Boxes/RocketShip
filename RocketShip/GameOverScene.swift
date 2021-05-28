@@ -99,6 +99,8 @@ class GameOverScene: SKScene{
 
         }}
     
+
+    
     @objc func UpdateBackgroundTexture(){
         if ticker == 0 {
             background.texture = SKTexture(imageNamed: "glitter-universe-1-1" )
