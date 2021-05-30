@@ -29,6 +29,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var ticker = 0
     var spinner = 0
     
+    var AsteroidTextureAtlas = SKTextureAtlas()
+    var AsteroidTextureArray: [SKTexture] = []
+    
+    var PlayerShipTextureAtlas = SKTextureAtlas()
+    var PlayerShipTextureArray: [SKTexture] = []
+    
     var lives = 3
     let LivesLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
@@ -136,6 +142,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.physicsBody!.collisionBitMask = PhysicsCatergories.None
         player.physicsBody!.contactTestBitMask = PhysicsCatergories.Enemy
         
+        
         ScoreLabel.text = "Score : 0"
         ScoreLabel.fontSize = 70
         ScoreLabel.fontColor = SKColor.white
@@ -150,6 +157,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         LivesLabel.zPosition = 100
         self.addChild(LivesLabel)
         self.addChild(ScoreLabel)
+        
+        AsteroidTextureAtlas = SKTextureAtlas(named: "AsteroidSpin.atlas")
+        PlayerShipTextureAtlas = SKTextureAtlas(named: "PlayerShipAnimations.atlas")
+        
+        for i in 1...AsteroidTextureAtlas.textureNames.count{
+            var TexName = "A\(i)@0.5x.png"
+            AsteroidTextureArray.append(SKTexture(imageNamed: TexName))
+        }
+        
+        for n in 1...PlayerShipTextureAtlas.textureNames.count{
+            var texture = "Ship\(n).png"
+            PlayerShipTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+
         
         FlameTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(UpdateFlameTexture), userInfo: nil, repeats: true)
         startNewLevel()
@@ -457,7 +479,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
         let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
-        let EnemyDecider = Int.random(in: 1..<4)
+//        let EnemyDecider = Int.random(in: 1..<4)
+        let EnemyDecider = 3
         var enemy : SKSpriteNode!
         if EnemyDecider == 1{
             enemy = SKSpriteNode(imageNamed: "enemySmall")
@@ -504,19 +527,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(enemy)
 
         
-        let moveEnemy = SKAction.move(to: endPoint, duration: 1.5)
+        let moveEnemy = SKAction.move(to: endPoint, duration: 2)
+        let anim =  SKAction.animate(with: AsteroidTextureArray, timePerFrame: 0.009)
+        let anim4eva = SKAction.repeatForever(anim)
         let deleteEnemy = SKAction.removeFromParent()
         let wellDoneSoldier = SKAction.run(loselives)
         let stopSpinning = SKAction.run(StopSpinner)
+        let moveAndRemove = SKAction.sequence([moveEnemy, deleteEnemy])
+        let grop = SKAction.group([anim4eva, moveAndRemove])
         let enemySequence = SKAction.sequence([moveEnemy, deleteEnemy, wellDoneSoldier])
-        let roidSequence = SKAction.sequence([moveEnemy, deleteEnemy, stopSpinning])
+        let roidSequence = SKAction.sequence([grop, deleteEnemy])
         let coinSequence = SKAction.sequence([moveEnemy, deleteEnemy])
         if currentGameState == gameState.DuringGame{
-            
+
             // We do this as only the enemy ships should take lives off the player
-            
-            if enemy.name == "OPPBOY"{
-                enemy.run(enemySequence)
+
+            if enemy.name == "ROID"{
+                enemy.run(grop)
             }else{
                 enemy.run(coinSequence)
             }
@@ -525,6 +552,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let diffY = endPoint.y - startPoint.y
         let amount2Rotate = atan2(diffY, diffX)
         enemy.zRotation = amount2Rotate
+        
 
     }
     
@@ -532,93 +560,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         AsteroidSpinner.invalidate()
     }
     
-    @objc func AsteroidSpinnerTextures(){
-        if spinner == 0{
-            enemy.texture = SKTexture(imageNamed: "A1@0.5x")
-            spinner = 1
-        }
-        if spinner == 1{
-            enemy.texture = SKTexture(imageNamed: "A2@0.5x")
-            spinner = 2
-        }
-        if spinner == 2{
-            enemy.texture = SKTexture(imageNamed: "A3@0.5x")
-            spinner = 3
-        }
-        if spinner == 3{
-            enemy.texture = SKTexture(imageNamed: "A4@0.5x")
-            spinner = 4
-        }
-        if spinner == 4{
-            enemy.texture = SKTexture(imageNamed: "A5@0.5x")
-            spinner = 5
-        }
-        if spinner == 5{
-            enemy.texture = SKTexture(imageNamed: "A6@0.5x")
-            spinner = 6
-        }
-        if spinner == 6{
-            enemy.texture = SKTexture(imageNamed: "A7@0.5x")
-            spinner = 7
-        }
-        if spinner == 7{
-            enemy.texture = SKTexture(imageNamed: "A8@0.5x")
-            spinner = 8
-        }
-        if spinner == 8{
-            enemy.texture = SKTexture(imageNamed: "A9@0.5x")
-            spinner = 9
-        }
-        if spinner == 9{
-            enemy.texture = SKTexture(imageNamed: "A10@0.5x")
-            spinner = 10
-        }
-        if spinner == 10{
-            enemy.texture = SKTexture(imageNamed: "A11@0.5x")
-            spinner = 11
-        }
-        if spinner == 11{
-            enemy.texture = SKTexture(imageNamed: "A12@0.5x")
-            spinner = 12
-        }
-        if spinner == 12{
-            enemy.texture = SKTexture(imageNamed: "A13@0.5x")
-            spinner = 13
-        }
-        if spinner == 13{
-            enemy.texture = SKTexture(imageNamed: "A14@0.5x")
-            spinner = 14
-        }
-        if spinner == 14{
-            enemy.texture = SKTexture(imageNamed: "A15@0.5x")
-            spinner = 15
-        }
-        if spinner == 15{
-            enemy.texture = SKTexture(imageNamed: "A16@0.5x")
-            spinner = 16
-        }
-        if spinner == 16{
-            enemy.texture = SKTexture(imageNamed: "A17@0.5x")
-            spinner = 17
-        }
-        if spinner == 17{
-            enemy.texture = SKTexture(imageNamed: "A18@0.5x")
-            spinner = 18
-        }
-        if spinner == 18{
-            enemy.texture = SKTexture(imageNamed: "A19@0.5x")
-            spinner = 19
-        }
-        if spinner == 19{
-            enemy.texture = SKTexture(imageNamed: "A20@0.5x")
-            spinner = 20
-        }
-        if spinner == 20{
-            enemy.texture = SKTexture(imageNamed: "A21@0.5x")
-            spinner = 0
-        }
 
-    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 

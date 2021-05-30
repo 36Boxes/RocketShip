@@ -11,6 +11,8 @@
 		CA587E8525F7DF70001A678E /* theboldfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA587E8425F7DF70001A678E /* theboldfont.ttf */; };
 		CAB32BCC26600BD100BF176C /* LeaderboardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB32BCA26600BD100BF176C /* LeaderboardCell.swift */; };
 		CAB32BCD26600BD100BF176C /* LeaderboardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAB32BCB26600BD100BF176C /* LeaderboardCell.xib */; };
+		CAB32BD22663C27700BF176C /* AsteroidSpin.atlas in Resources */ = {isa = PBXBuildFile; fileRef = CAB32BD12663C27700BF176C /* AsteroidSpin.atlas */; };
+		CAB32BD72663E31D00BF176C /* PlayerShipAnimations.atlas in Resources */ = {isa = PBXBuildFile; fileRef = CAB32BD62663E31D00BF176C /* PlayerShipAnimations.atlas */; };
 		CABAE15125F8FF2400FAE5E2 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABAE15025F8FF2400FAE5E2 /* GameOverScene.swift */; };
 		CABAE15725F90AD400FAE5E2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CABAE15625F90AD400FAE5E2 /* GameKit.framework */; };
 		CAD58F4D25F6637600B87D72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD58F4C25F6637600B87D72 /* AppDelegate.swift */; };
@@ -48,6 +50,8 @@
 		CA587E8425F7DF70001A678E /* theboldfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = theboldfont.ttf; sourceTree = "<group>"; };
 		CAB32BCA26600BD100BF176C /* LeaderboardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardCell.swift; sourceTree = "<group>"; };
 		CAB32BCB26600BD100BF176C /* LeaderboardCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaderboardCell.xib; sourceTree = "<group>"; };
+		CAB32BD12663C27700BF176C /* AsteroidSpin.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AsteroidSpin.atlas; sourceTree = "<group>"; };
+		CAB32BD62663E31D00BF176C /* PlayerShipAnimations.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = PlayerShipAnimations.atlas; sourceTree = "<group>"; };
 		CABAE15025F8FF2400FAE5E2 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		CABAE15625F90AD400FAE5E2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		CAD58F4925F6637600B87D72 /* RocketShip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RocketShip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +131,8 @@
 		CAD58F4B25F6637600B87D72 /* RocketShip */ = {
 			isa = PBXGroup;
 			children = (
+				CAB32BD62663E31D00BF176C /* PlayerShipAnimations.atlas */,
+				CAB32BD12663C27700BF176C /* AsteroidSpin.atlas */,
 				CAD58F4C25F6637600B87D72 /* AppDelegate.swift */,
 				CAD58F4E25F6637600B87D72 /* GameScene.sks */,
 				CAD58F5025F6637600B87D72 /* Actions.sks */,
@@ -269,10 +275,12 @@
 			files = (
 				CA587E8525F7DF70001A678E /* theboldfont.ttf in Resources */,
 				CA587E8025F7DBDB001A678E /* ADAM.CGPRO.otf in Resources */,
+				CAB32BD22663C27700BF176C /* AsteroidSpin.atlas in Resources */,
 				CAD58F5825F6637600B87D72 /* Main.storyboard in Resources */,
 				CAD58F4F25F6637600B87D72 /* GameScene.sks in Resources */,
 				CAD58F5A25F6637700B87D72 /* Assets.xcassets in Resources */,
 				CAB32BCD26600BD100BF176C /* LeaderboardCell.xib in Resources */,
+				CAB32BD72663E31D00BF176C /* PlayerShipAnimations.atlas in Resources */,
 				CAD58F5125F6637600B87D72 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
