@@ -363,7 +363,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
         let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
-        let EnemyDecider = Int.random(in: 1..<6)
+        let EnemyDecider = Int.random(in: 1..<5)
         var enemy : SKSpriteNode!
         if EnemyDecider == 1{
             enemy = SKSpriteNode(imageNamed: "enemySmall")
@@ -401,15 +401,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
             enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
         }
-        if EnemyDecider == 5{
-            enemy = SKSpriteNode(imageNamed: "2xp1")
-            enemy.name = "DoubleXP"
-            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
-            enemy.physicsBody!.affectedByGravity = false
-            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.XPCoin
-            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
-            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
-        }
+//        if EnemyDecider == 5{
+//            enemy = SKSpriteNode(imageNamed: "2xp1")
+//            enemy.name = "DoubleXP"
+//            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+//            enemy.physicsBody!.affectedByGravity = false
+//            enemy.physicsBody!.categoryBitMask = PhysicsCatergories.XPCoin
+//            enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
+//            enemy.physicsBody!.contactTestBitMask = PhysicsCatergories.Player | PhysicsCatergories.Bullet
+//        }
 //        if EnemyDecider == 3{
 //            let Lucky = Int.random(in: 1..<3)
 //            if Lucky == 2{
@@ -716,6 +716,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         
+        // If the player hits the GOLD asteroid
+        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.GoldAsteroid{
+            if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                body2.node?.removeFromParent()
+                addScore()
+            }else{
+            if body1.node != nil{Explode(explodeposition: body1.node!.position)}
+            if body2.node != nil{ExplodePurpleDiamond(explodeposition: body2.node!.position)}
+
+            body1.node?.removeFromParent()
+            body2.node?.removeFromParent()
+            gameOver()
+                
+            }
+            
+        }
+        
         // If the player hits an asteroid fragment
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.AsteroidFragment{
             if CurrentRocketMode == RocketMode.Boosted{
@@ -731,6 +749,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             gameOver()
             }
         }
+        
+        // If the player hits a Purple diamond
+        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.PurpleDiamond{
+            AddBonus()
+            body2.node?.removeFromParent()
+            }
+        // If a bullet hits a purple diamond
+        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.PurpleDiamond{
+            if body2.node != nil{ExplodePurpleDiamond(explodeposition: body2.node!.position)}
+            body1.node?.removeFromParent()
+            body2.node?.removeFromParent()
+            }
     }
     
     @objc func BoostedCountdown(){
@@ -781,6 +811,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
         explosion.run(explosionSequence)
     }
+    func ExplodePurpleDiamond(explodeposition: CGPoint){
+        let explosion = SKSpriteNode(imageNamed: "explosion1purple")
+        explosion.position = explodeposition
+        explosion.zPosition = 3
+        explosion.setScale(0)
+        self.addChild(explosion)
+        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
+        let fade = SKAction.fadeOut(withDuration: 0.1)
+        let remove = SKAction.removeFromParent()
+        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
+        explosion.run(explosionSequence)
+    }
+
     func FragmentAsteroid(FragPosition: CGPoint){
         let startPoint = FragPosition
         let randomXEnd = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
