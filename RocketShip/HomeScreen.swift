@@ -22,7 +22,54 @@ class RocketShipHomeScreen: SKScene , GKGameCenterControllerDelegate{
     var ticker = 0
     let localPlayer = GKLocalPlayer.local
     var GameCenterPlayer = true
-
+    var BackgroundTextureAtlas = SKTextureAtlas()
+    var BackgroundTextureArray: [SKTexture] = []
+    let gameArea: CGRect
+    
+    var AsteroidTextureAtlas = SKTextureAtlas()
+    var AsteroidTextureArray: [SKTexture] = []
+    
+    var EnemyTextureAtlas = SKTextureAtlas()
+    var EnemyTextureArray: [SKTexture] = []
+    
+    var GoldAsteroidTextureAtlas = SKTextureAtlas()
+    var GoldAsteroidTextureArray: [SKTexture] = []
+    
+    var BlueDiamondTextureAtlas = SKTextureAtlas()
+    var BlueDiamondTextureArray: [SKTexture] = []
+    
+    var GreenDiamondTextureAtlas = SKTextureAtlas()
+    var GreenDiamondTextureArray: [SKTexture] = []
+    
+    var PurpleDiamondTextureAtlas = SKTextureAtlas()
+    var PurpleDiamondTextureArray: [SKTexture] = []
+    
+    var PlayerShipTextureAtlas = SKTextureAtlas()
+    var PlayerShipTextureArray: [SKTexture] = []
+    
+    var PlayerShipBoostedTextureAtlas = SKTextureAtlas()
+    var PlayerShipBoostedTextureArray: [SKTexture] = []
+    
+    var BoostCoinTextureAtlas = SKTextureAtlas()
+    var BoostCoinTextureArray: [SKTexture] = []
+    
+    var XPCoinTextureAtlas = SKTextureAtlas()
+    var XPCoinTextureArray: [SKTexture] = []
+    
+    override init(size: CGSize){
+        
+        // to have this work nicely on most devices i could maybe identify the device and then have the correct aspect ratio
+        let maxAspectRatio: CGFloat = 19.5/9
+        let gameAreaWidth = size.height / maxAspectRatio
+        let margin = (size.width - gameAreaWidth) / 2
+        gameArea = CGRect(x: margin, y: 0, width: gameAreaWidth, height: size.height)
+        super.init(size:size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 
     
     override func didMove(to view: SKView) {
@@ -62,92 +109,83 @@ class RocketShipHomeScreen: SKScene , GKGameCenterControllerDelegate{
         Leaderboards.zPosition = 1
         Leaderboards.name = "Leaderboards"
         self.addChild(Leaderboards)
-        BackgroundAnimation = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(UpdateBackgroundTexture), userInfo: nil, repeats: true)
+        
+        AsteroidTextureAtlas = SKTextureAtlas(named: "AsteroidSpin.atlas")
+        PlayerShipTextureAtlas = SKTextureAtlas(named: "Boost.atlas")
+        PlayerShipBoostedTextureAtlas = SKTextureAtlas(named: "Boost.atlas")
+        BackgroundTextureAtlas = SKTextureAtlas(named: "BackgroundImages.atlas")
+        GoldAsteroidTextureAtlas = SKTextureAtlas(named: "goldAsteroidSpin.atlas")
+        BoostCoinTextureAtlas = SKTextureAtlas(named: "boostcoinspin.atlas")
+        XPCoinTextureAtlas = SKTextureAtlas(named: "purplexp.atlas")
+        PurpleDiamondTextureAtlas = SKTextureAtlas(named: "purpleDiamond.atlas")
+        GreenDiamondTextureAtlas = SKTextureAtlas(named: "greenDiamond.atlas")
+        BlueDiamondTextureAtlas = SKTextureAtlas(named: "blueDiamond.atlas")
+        EnemyTextureAtlas = SKTextureAtlas(named: "Enemyflames.atlas")
+        
+        for i in 1...EnemyTextureAtlas.textureNames.count{
+            let TexName = "E\(i).png"
+            EnemyTextureArray.append(SKTexture(imageNamed: TexName))
+        }
+        
+        for i in 1...AsteroidTextureAtlas.textureNames.count{
+            let TexName = "A\(i)@0.5x.png"
+            AsteroidTextureArray.append(SKTexture(imageNamed: TexName))
+        }
+        
+        for n in 1...PlayerShipTextureAtlas.textureNames.count{
+            let texture = "Boost\(n).png"
+            PlayerShipTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...PlayerShipBoostedTextureAtlas.textureNames.count{
+            let texture = "Boost\(a).png"
+            PlayerShipBoostedTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...GoldAsteroidTextureAtlas.textureNames.count{
+            let texture = "GA\(a).png"
+            GoldAsteroidTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...BoostCoinTextureAtlas.textureNames.count{
+            let texture = "BoostCoin\(a).png"
+            BoostCoinTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...XPCoinTextureAtlas.textureNames.count{
+            let texture = "XPP\(a).png"
+            XPCoinTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...PurpleDiamondTextureAtlas.textureNames.count{
+            let texture = "Purple\(a).png"
+            PurpleDiamondTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...GreenDiamondTextureAtlas.textureNames.count{
+            let texture = "Green\(a).png"
+            GreenDiamondTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...BlueDiamondTextureAtlas.textureNames.count{
+            let texture = "Blue\(a).png"
+            BlueDiamondTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for p in 1...BackgroundTextureAtlas.textureNames.count{
+            let texture = "glitter-universe-1-\(p).png"
+            BackgroundTextureArray.append(SKTexture(imageNamed: texture))
+        }
+
+        
+        let anim =  SKAction.animate(with: BackgroundTextureArray, timePerFrame: 0.02)
+        let anim4eva = SKAction.repeatForever(anim)
+        background.run(anim4eva, withKey: "StanBack")
+        startNewLevel()
         authPlayer()
         
     }
     
-    @objc func UpdateBackgroundTexture(){
-        if ticker == 0 {
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-1" )
-            ticker = 1
-        }else if ticker == 1{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-2" )
-            ticker = 2
-        }else if ticker == 2{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-3" )
-            ticker = 3
-        }else if ticker == 3{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-4" )
-            ticker = 4
-        }else if ticker == 4{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-5" )
-            ticker = 5
-        }else if ticker == 5{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-6" )
-            ticker = 6
-        }else if ticker == 6{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-7" )
-            ticker = 7
-        }else if ticker == 7{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-8" )
-            ticker = 8
-        }else if ticker == 8{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-9" )
-            ticker = 9
-        }else if ticker == 9{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-10" )
-            ticker = 10
-        }else if ticker == 10{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-11" )
-            ticker = 11
-        }else if ticker == 11{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-12" )
-            ticker = 12
-        }else if ticker == 12{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-13" )
-            ticker = 13
-        }else if ticker == 13{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-14" )
-            ticker = 14
-        }else if ticker == 14{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-15" )
-            ticker = 15
-        }else if ticker == 15{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-16" )
-            ticker = 16
-        }else if ticker == 16{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-17" )
-            ticker = 17
-        }else if ticker == 17{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-18" )
-            ticker = 18
-        }else if ticker == 18{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-19" )
-            ticker = 19
-        }else if ticker == 19{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-20" )
-            ticker = 20
-        }else if ticker == 20{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-21" )
-            ticker = 21
-        }else if ticker == 21{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-22" )
-            ticker = 22
-        }else if ticker == 22{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-23" )
-            ticker = 23
-        }else if ticker == 23{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-24" )
-            ticker = 24
-        }else if ticker == 24{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-25" )
-            ticker = 25
-        }else if ticker == 25{
-            background.texture = SKTexture(imageNamed: "glitter-universe-1-26" )
-            ticker = 0
-        }
-    }
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -186,6 +224,159 @@ class RocketShipHomeScreen: SKScene , GKGameCenterControllerDelegate{
             // if they dont dont show view and log they are not in gamecenter
             else {self.GameCenterPlayer = false}
         }}
+    
+    func startNewLevel(){
+        
+        let spawn = SKAction.run(SpawnEnemy)
+        let waitToSpawn = SKAction.wait(forDuration: 0.5)
+        let spawnSequence = SKAction.sequence([waitToSpawn, spawn])
+        let spawnLoop = SKAction.repeatForever(spawnSequence)
+        self.run(spawnLoop, withKey: "SpawningEnemies")
+    }
+    
+    func SpawnEnemy(){
+        
+        let randomXStart = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        let randomXEnd = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
+        
+        let startPoint = CGPoint(x: randomXStart, y: self.size.height * 1.2)
+        let endPoint = CGPoint(x: randomXEnd, y: -self.size.height * 0.2)
+        let EnemyDecider = Int.random(in: 1..<8)
+        var enemy : SKSpriteNode!
+        if EnemyDecider == 1{
+            enemy = SKSpriteNode(imageNamed: "enemySmall")
+            enemy.name = "OPPBOY"
+            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody!.affectedByGravity = false
+        }
+        if EnemyDecider == 2{
+            enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
+            enemy.name = "ROID"
+            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody!.affectedByGravity = false
+        }
+        if EnemyDecider == 3{
+            let Lucky = Int.random(in: 1..<8)
+            if Lucky == 2{
+                enemy = SKSpriteNode(imageNamed: "BoostCoin1")
+                enemy.name = "BOOST"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+            }
+            else{
+                enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
+                enemy.name = "ROID"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+            }
+        }
+        if EnemyDecider == 4{
+            let Lucky = Int.random(in: 1..<3)
+            if Lucky == 2{
+                enemy = SKSpriteNode(imageNamed: "GA1")
+                enemy.name = "GOLDROID"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+            }
+            else{
+                enemy = SKSpriteNode(imageNamed: "GA1")
+                enemy.name = "GOLDROID"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+            }
+        }
+        if EnemyDecider == 5{
+            let Lucky = Int.random(in: 1..<8)
+            if Lucky == 2{
+                enemy = SKSpriteNode(imageNamed: "PurpleXP1")
+                enemy.name = "DoubleXP"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+            }
+            else{
+                enemy = SKSpriteNode(imageNamed: "Purple1")
+                enemy.name = "PURP"
+                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody!.affectedByGravity = false
+            }
+        }
+        if EnemyDecider == 6{
+            enemy = SKSpriteNode(imageNamed: "Green1")
+            enemy.name = "Green"
+            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody!.affectedByGravity = false
+        }
+        if EnemyDecider == 7{
+            enemy = SKSpriteNode(imageNamed: "Blue1")
+            enemy.name = "Blue"
+            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody!.affectedByGravity = false
+        }
+       
+        enemy.position = startPoint
+        enemy.zPosition = 1
+        self.addChild(enemy)
+
+        
+        let moveEnemy = SKAction.move(to: endPoint, duration: 2)
+        let anim =  SKAction.animate(with: AsteroidTextureArray, timePerFrame: 0.009)
+        let anim4eva = SKAction.repeatForever(anim)
+        let anim1 =  SKAction.animate(with: GoldAsteroidTextureArray, timePerFrame: 0.009)
+        let anim4eva1 = SKAction.repeatForever(anim1)
+        let anim2 =  SKAction.animate(with: BoostCoinTextureArray, timePerFrame: 0.009)
+        let anim4eva2 = SKAction.repeatForever(anim2)
+        let anim3 = SKAction.animate(with: PurpleDiamondTextureArray, timePerFrame: 0.009)
+        let anim4eva3 = SKAction.repeatForever(anim3)
+        let anim4 =  SKAction.animate(with: EnemyTextureArray, timePerFrame: 0.1)
+        let anim4eva4 = SKAction.repeatForever(anim4)
+        let anim5 = SKAction.animate(with: BlueDiamondTextureArray, timePerFrame: 0.009)
+        let anim4eva5 = SKAction.repeatForever(anim5)
+        let anim6 = SKAction.animate(with: GreenDiamondTextureArray, timePerFrame: 0.009)
+        let anim4eva6 = SKAction.repeatForever(anim6)
+        let deleteEnemy = SKAction.removeFromParent()
+        let moveAndRemove = SKAction.sequence([moveEnemy, deleteEnemy])
+        let moveAndRemoveandLive = SKAction.sequence([moveEnemy, deleteEnemy])
+        let grop = SKAction.group([anim4eva, moveAndRemove])
+        let grop1 = SKAction.group([anim4eva1, moveAndRemove])
+        let grop2 = SKAction.group([anim4eva2, moveAndRemove])
+        let grop4 = SKAction.group([anim4eva4, moveAndRemoveandLive])
+        let grop5 = SKAction.group([anim4eva3, moveAndRemove])
+        let grop6 = SKAction.group([anim4eva5, moveAndRemove])
+        let grop7 = SKAction.group([anim4eva6, moveAndRemove])
+
+            // We do this as only the enemy ships should take lives off the player
+            if enemy.name == "GOLDROID"{
+                enemy.run(grop1)
+            }
+            if enemy.name == "BOOST"{
+                enemy.run(grop2)
+            }
+            if enemy.name == "DoubleXP"{
+                enemy.run(moveAndRemove)
+            }
+            if enemy.name == "ROID"{
+                enemy.run(grop)
+            }
+            if enemy.name == "OPPBOY"{
+                enemy.run(grop4)
+            }
+        if enemy.name == "PURP"{
+            enemy.run(grop5)
+        }
+        if enemy.name == "Blue"{
+            enemy.run(grop6)
+        }
+        if enemy.name == "Green"{
+            enemy.run(grop7)
+        }
+        
+        let diffX = endPoint.x - startPoint.x
+        let diffY = endPoint.y - startPoint.y
+        let amount2Rotate = atan2(diffY, diffX)
+        enemy.zRotation = amount2Rotate
+        
+
+    }
 
     
     
