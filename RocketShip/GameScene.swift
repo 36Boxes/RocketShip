@@ -417,7 +417,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if Lucky == 2{
                 enemy = SKSpriteNode(imageNamed: "BoostCoin1")
                 enemy.name = "BOOST"
-                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody = SKPhysicsBody(circleOfRadius: enemy.size.width)
                 enemy.physicsBody!.affectedByGravity = false
                 enemy.physicsBody!.categoryBitMask = PhysicsCatergories.GoldCoin
                 enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -1061,7 +1061,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let enemy1 : SKSpriteNode
         enemy1 = SKSpriteNode(imageNamed: "Purple1")
         enemy1.name = "ROID"
-        enemy1.physicsBody = SKPhysicsBody(circleOfRadius: enemy1.size.width/2)
+        enemy1.physicsBody = SKPhysicsBody(circleOfRadius: enemy1.size.width)
         enemy1.physicsBody!.affectedByGravity = false
         enemy1.physicsBody!.categoryBitMask = PhysicsCatergories.PurpleDiamond
         enemy1.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -1072,7 +1072,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let enemy2 : SKSpriteNode
         enemy2 = SKSpriteNode(imageNamed: "Green1")
         enemy2.name = "ROID"
-        enemy2.physicsBody = SKPhysicsBody(circleOfRadius: enemy2.size.width/2)
+        enemy2.physicsBody = SKPhysicsBody(circleOfRadius: enemy2.size.width)
         enemy2.physicsBody!.affectedByGravity = false
         enemy2.physicsBody!.categoryBitMask = PhysicsCatergories.PurpleDiamond
         enemy2.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -1083,7 +1083,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let enemy3 : SKSpriteNode
         enemy3 = SKSpriteNode(imageNamed: "Blue1")
         enemy3.name = "ROID"
-        enemy3.physicsBody = SKPhysicsBody(circleOfRadius: enemy3.size.width/2)
+        enemy3.physicsBody = SKPhysicsBody(circleOfRadius: enemy3.size.width)
         enemy3.physicsBody!.affectedByGravity = false
         enemy3.physicsBody!.categoryBitMask = PhysicsCatergories.PurpleDiamond
         enemy3.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
