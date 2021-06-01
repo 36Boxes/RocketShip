@@ -22,8 +22,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let ScoreLabel = SKLabelNode(fontNamed: "ADAM.CGPRO")
     
-    var BackgroundAnimation: Timer!
-    var AsteroidSpinner: Timer!
     let background = SKSpriteNode(imageNamed: "glitter-universe-1-1")
     var enemy : SKSpriteNode!
     var ticker = 0
@@ -76,11 +74,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Adding the player to the scene
     
-    let player = SKSpriteNode(imageNamed: "E1")
+    let player = SKSpriteNode(imageNamed: "Boost1")
     
-    var DoubleXPTimer : Timer!
-    
-    var BoostedTimer : Timer!
     
     var counter = 0
     var count: Int = 0
@@ -205,87 +200,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(LivesLabel)
         self.addChild(ScoreLabel)
         
-        AsteroidTextureAtlas = SKTextureAtlas(named: "AsteroidSpin.atlas")
-        PlayerShipTextureAtlas = SKTextureAtlas(named: "Boost.atlas")
-        PlayerShipBoostedTextureAtlas = SKTextureAtlas(named: "Boost.atlas")
-        BackgroundTextureAtlas = SKTextureAtlas(named: "BackgroundImages.atlas")
-        BoostedBackgroundTextureAtlas = SKTextureAtlas(named: "BoostedBackground.atlas")
-        DoublePointsBackgroundTextureAtlas = SKTextureAtlas(named: "DoublePointsBackground.atlas")
-        BoostedDoublePointsBackgroundTextureAtlas = SKTextureAtlas(named: "BoostedDoublePointsBackground.atlas")
-        GoldAsteroidTextureAtlas = SKTextureAtlas(named: "goldAsteroidSpin.atlas")
-        BoostCoinTextureAtlas = SKTextureAtlas(named: "boostcoinspin.atlas")
-        XPCoinTextureAtlas = SKTextureAtlas(named: "purplexp.atlas")
-        PurpleDiamondTextureAtlas = SKTextureAtlas(named: "purpleDiamond.atlas")
-        GreenDiamondTextureAtlas = SKTextureAtlas(named: "greenDiamond.atlas")
-        BlueDiamondTextureAtlas = SKTextureAtlas(named: "blueDiamond.atlas")
-        EnemyTextureAtlas = SKTextureAtlas(named: "Enemyflames.atlas")
-        
-        for i in 1...EnemyTextureAtlas.textureNames.count{
-            let TexName = "E\(i).png"
-            EnemyTextureArray.append(SKTexture(imageNamed: TexName))
-        }
-        
-        for i in 1...AsteroidTextureAtlas.textureNames.count{
-            let TexName = "A\(i)@0.5x.png"
-            AsteroidTextureArray.append(SKTexture(imageNamed: TexName))
-        }
-        
-        for n in 1...PlayerShipTextureAtlas.textureNames.count{
-            let texture = "Boost\(n).png"
-            PlayerShipTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for a in 1...PlayerShipBoostedTextureAtlas.textureNames.count{
-            let texture = "Boost\(a).png"
-            PlayerShipBoostedTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for a in 1...GoldAsteroidTextureAtlas.textureNames.count{
-            let texture = "GA\(a).png"
-            GoldAsteroidTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for a in 1...BoostCoinTextureAtlas.textureNames.count{
-            let texture = "BoostCoin\(a).png"
-            BoostCoinTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for a in 1...XPCoinTextureAtlas.textureNames.count{
-            let texture = "XPP\(a).png"
-            XPCoinTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for a in 1...PurpleDiamondTextureAtlas.textureNames.count{
-            let texture = "Purple\(a).png"
-            PurpleDiamondTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for a in 1...GreenDiamondTextureAtlas.textureNames.count{
-            let texture = "Green\(a).png"
-            GreenDiamondTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for a in 1...BlueDiamondTextureAtlas.textureNames.count{
-            let texture = "Blue\(a).png"
-            BlueDiamondTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        
-        for p in 1...BackgroundTextureAtlas.textureNames.count{
-            let texture = "glitter-universe-1-\(p).png"
-            BackgroundTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        for p in 1...BoostedBackgroundTextureAtlas.textureNames.count{
-            let texture = "red-universe-1-\(p).png"
-            BoostedBackgroundTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        for p in 1...DoublePointsBackgroundTextureAtlas.textureNames.count{
-            let texture = "green-universe-1-\(p).png"
-            DoublePointsBackgroundTextureArray.append(SKTexture(imageNamed: texture))
-        }
-        for p in 1...BoostedDoublePointsBackgroundTextureAtlas.textureNames.count{
-            let texture = "gold-universe-1-\(p).png"
-            BoostedDoublePointsBackgroundTextureArray.append(SKTexture(imageNamed: texture))
-        }
+        loadTextures()
         
         let anim =  SKAction.animate(with: BackgroundTextureArray, timePerFrame: 0.02)
         let anim4eva = SKAction.repeatForever(anim)
@@ -306,7 +221,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lives -= 1
         LivesLabel.text = "Lives : \(lives)"
         
-        let scaleUp = SKAction.scale(to: 1.5, duration: 0.2)
+        let scaleUp = SKAction.scale(to: 2.5, duration: 0.2)
         let scaleDown = SKAction.scale(to: 1, duration: 0.2)
         let sequence = SKAction.sequence([scaleUp, scaleDown])
         LivesLabel.run(sequence)
@@ -397,7 +312,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if EnemyDecider == 1{
             enemy = SKSpriteNode(imageNamed: "enemySmall")
             enemy.name = "OPPBOY"
-            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody = SKPhysicsBody(circleOfRadius: enemy.size.width)
             enemy.physicsBody!.affectedByGravity = false
             enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Enemy
             enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -406,7 +321,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if EnemyDecider == 2{
             enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
             enemy.name = "ROID"
-            enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+            enemy.physicsBody = SKPhysicsBody(circleOfRadius: enemy.size.width)
             enemy.physicsBody!.affectedByGravity = false
             enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Asteroid
             enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -426,7 +341,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             else{
                 enemy = SKSpriteNode(imageNamed: "AsteroidSmall")
                 enemy.name = "ROID"
-                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody = SKPhysicsBody(circleOfRadius: enemy.size.width)
                 enemy.physicsBody!.affectedByGravity = false
                 enemy.physicsBody!.categoryBitMask = PhysicsCatergories.Asteroid
                 enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -438,7 +353,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if Lucky == 2{
                 enemy = SKSpriteNode(imageNamed: "GA1")
                 enemy.name = "GOLDROID"
-                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody = SKPhysicsBody(circleOfRadius: enemy.size.width)
                 enemy.physicsBody!.affectedByGravity = false
                 enemy.physicsBody!.categoryBitMask = PhysicsCatergories.GoldAsteroid
                 enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -447,7 +362,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             else{
                 enemy = SKSpriteNode(imageNamed: "GA1")
                 enemy.name = "GOLDROID"
-                enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+                enemy.physicsBody = SKPhysicsBody(circleOfRadius: enemy.size.width)
                 enemy.physicsBody!.affectedByGravity = false
                 enemy.physicsBody!.categoryBitMask = PhysicsCatergories.GoldAsteroid
                 enemy.physicsBody!.collisionBitMask = PhysicsCatergories.Enemy | PhysicsCatergories.Bullet
@@ -499,7 +414,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let grop1 = SKAction.group([anim4eva1, moveAndRemove])
         let grop2 = SKAction.group([anim4eva2, moveAndRemove])
         let grop4 = SKAction.group([anim4eva4, moveAndRemoveandLive])
-        let enemySequence = SKAction.sequence([moveEnemy, deleteEnemy, wellDoneSoldier])
         if currentGameState == gameState.DuringGame{
 
             // We do this as only the enemy ships should take lives off the player
@@ -527,47 +441,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     }
     
-    func StopSpinner(){
-        AsteroidSpinner.invalidate()
-    }
-    
-    @objc func BoostedTime(){
-        print(count)
-        if BoostedTimer != nil{
-        if count > 0{
-            count -= 1
-        };if count == 0{
-            print("Finish")
-            player.removeAction(forKey: "BOOST")
-            let an1m = SKAction.animate(with: PlayerShipTextureArray, timePerFrame: 0.05)
-            let an1m4eva = SKAction.repeatForever(an1m)
-            player.run(an1m4eva, withKey: "Standard")
-            if CurrentRocketMode == RocketMode.BoostedDoubleXP{CurrentRocketMode = RocketMode.DoubleXP}
-            if CurrentRocketMode == RocketMode.Boosted{CurrentRocketMode = RocketMode.Normal}
-        }
-    }
-    }
-    
-    
-    @objc func DoubleTime(){
-        if DoubleXPTimer != nil{
-        if count > 0{
-            count -= 1
-        };if count == 0{
-            print("Finish")
-            player.removeAction(forKey: "BOOST")
-            let an1m = SKAction.animate(with: PlayerShipTextureArray, timePerFrame: 0.05)
-            let an1m4eva = SKAction.repeatForever(an1m)
-            player.run(an1m4eva, withKey: "Standard")
-            if CurrentRocketMode == RocketMode.BoostedDoubleXP{CurrentRocketMode = RocketMode.Boosted}
-            if CurrentRocketMode == RocketMode.DoubleXP{CurrentRocketMode = RocketMode.Normal}
-            DoubleXPTimer.invalidate()
-            DoubleXPTimer = nil
-        }
-    }
-    }
-    
-
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 
@@ -581,6 +454,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         var body1 = SKPhysicsBody()
         var body2 = SKPhysicsBody()
+        
+        let boostxpback = SKAction.animate(with: BoostedDoublePointsBackgroundTextureArray, timePerFrame: 0.02)
+        let boostedXPback4eva = SKAction.repeatForever(boostxpback)
+        
+        let boostback = SKAction.animate(with: BoostedBackgroundTextureArray, timePerFrame: 0.02)
+        let boostback4eva = SKAction.repeatForever(boostback)
+        
+        let xpback = SKAction.animate(with: DoublePointsBackgroundTextureArray, timePerFrame: 0.02)
+        let xpback4eva = SKAction.repeatForever(xpback)
+        
         if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask{
             body1 = contact.bodyA
             body2 = contact.bodyB
@@ -588,72 +471,54 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             body1 = contact.bodyB
             body2 = contact.bodyA
         }
-        
-        print(body1.node?.name)
-        print(body2.node?.name)
+
         
         // If the player hits the enemy
         
         if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Enemy{
             
             if CurrentRocketMode == RocketMode.BoostedDoubleXP{
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
                 body2.node?.removeFromParent()
                 addScore(number: 2)
             }
-            if CurrentRocketMode == RocketMode.DoubleXP{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.DoubleXP{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position, image: "Explosionred")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
 
-                body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
                 
-                gameOver()
+                loselives()
             }
-            if CurrentRocketMode == RocketMode.Boosted{
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
                 body2.node?.removeFromParent()
                 addScore(number: 1)
             }
-            if CurrentRocketMode == RocketMode.Normal{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Normal{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position, image: "Explosionred")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
 
-                body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
                 
-                gameOver()
+                loselives()
             }
         }
         
         // If the player runs into the gold coin
         
-        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
+        else if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
             
             // Since we hit the gold coin we want to give a bonus life and invunerable travel travel
             // My thought process is to call a 30 second timer in which we set the rocketmode to boosted.
             if CurrentRocketMode == RocketMode.DoubleXP{
                 CurrentRocketMode = RocketMode.BoostedDoubleXP
-                let boost = SKAction.animate(with: PlayerShipBoostedTextureArray, timePerFrame: 0.1)
-                let boost4eva = SKAction.repeatForever(boost)
-                player.removeAction(forKey: "Standard")
-                player.run(boost4eva, withKey: "BOOST")
-                
-                let boostback = SKAction.animate(with: BoostedDoublePointsBackgroundTextureArray, timePerFrame: 0.02)
-                let boostback4eva = SKAction.repeatForever(boostback)
                 background.removeAction(forKey: "DoubleBack")
-                background.run(boostback4eva, withKey: "DoubleBoostBack")
+                background.run(boostedXPback4eva, withKey: "DoubleBoostBack")
                 count = 10
             }
-            if CurrentRocketMode == RocketMode.Normal{
+            else if CurrentRocketMode == RocketMode.Normal{
                 CurrentRocketMode = RocketMode.Boosted
-                let boost = SKAction.animate(with: PlayerShipBoostedTextureArray, timePerFrame: 0.1)
-                let boost4eva = SKAction.repeatForever(boost)
-                player.removeAction(forKey: "Standard")
-                player.run(boost4eva, withKey: "BOOST")
-                
-                let boostback = SKAction.animate(with: BoostedBackgroundTextureArray, timePerFrame: 0.02)
-                let boostback4eva = SKAction.repeatForever(boostback)
                 background.removeAction(forKey: "StanBack")
                 background.run(boostback4eva, withKey: "BoostBack")
                 count = 10
@@ -664,34 +529,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // If the player runs into 2x coin
         
-        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.XPCoin{
+        else if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.XPCoin{
             
             // Since we hit the 2X coin we want to give doublepoints
             // My thought process is to call a 30 second timer in which we set the rocketmode to boosted.
             if CurrentRocketMode == RocketMode.Boosted{
                 CurrentRocketMode = RocketMode.BoostedDoubleXP
-                let boost = SKAction.animate(with: PlayerShipBoostedTextureArray, timePerFrame: 0.1)
-                let boost4eva = SKAction.repeatForever(boost)
-                player.removeAction(forKey: "Standard")
-                player.run(boost4eva, withKey: "BOOST")
-                
-                let boostback = SKAction.animate(with: BoostedDoublePointsBackgroundTextureArray, timePerFrame: 0.02)
-                let boostback4eva = SKAction.repeatForever(boostback)
                 background.removeAction(forKey: "DoubleBack")
-                background.run(boostback4eva, withKey: "DoubleBoostBack")
+                background.run(boostedXPback4eva, withKey: "DoubleBoostBack")
                 count = 10
             }
-            if CurrentRocketMode == RocketMode.Normal{
+            else if CurrentRocketMode == RocketMode.Normal{
                 CurrentRocketMode = RocketMode.DoubleXP
-                let boost = SKAction.animate(with: PlayerShipBoostedTextureArray, timePerFrame: 0.1)
-                let boost4eva = SKAction.repeatForever(boost)
-                player.removeAction(forKey: "Standard")
-                player.run(boost4eva, withKey: "BOOST")
-                
-                let boostback = SKAction.animate(with: DoublePointsBackgroundTextureArray, timePerFrame: 0.02)
-                let boostback4eva = SKAction.repeatForever(boostback)
                 background.removeAction(forKey: "StanBack")
-                background.run(boostback4eva, withKey: "BoostBack")
+                background.run(xpback4eva, withKey: "BoostBack")
                 count = 10
             }
             body2.node?.removeFromParent()
@@ -699,13 +550,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // If the bullet hits the gold coin
         
-        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
+        else if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.GoldCoin{
             if body2.node != nil{
                 
                 if body2.node!.position.y > self.size.height{
                     return
                 }else{
-                    Explodecoin(explodeposition: body2.node!.position)
+                    Explode(explodeposition: body2.node!.position, image: "explosion")
                     body2.node?.removeFromParent()
                 }
         }
@@ -713,20 +564,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Bullet hits 2X Coin
         
-        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.XPCoin{
+        else if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.XPCoin{
             if body2.node != nil{
                 
                 if body2.node!.position.y > self.size.height{
                     return
                 }else{
-                    ExplodePurpleDiamond(explodeposition: body2.node!.position)
+                    Explode(explodeposition: body2.node!.position, image: "explosion1purple")
                     body2.node?.removeFromParent()
                 }
         }
         }
         
         // If the bullet hits the enemy
-        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.Enemy{
+        else if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.Enemy{
             
             if body2.node != nil{
                 // Check wether the enemy is on screen when the bullet makes contact
@@ -735,19 +586,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }else{
                     // we know this is on the screen so we want to show an explosion
                     if CurrentRocketMode == RocketMode.BoostedDoubleXP{
-                        Explode(explodeposition: body2.node!.position)
+                        Explode(explodeposition: body2.node!.position, image: "Explosionred")
                         addScore(number: 2)
                     }
-                    if CurrentRocketMode == RocketMode.DoubleXP{
-                        Explode(explodeposition: body2.node!.position)
+                    else if CurrentRocketMode == RocketMode.DoubleXP{
+                        Explode(explodeposition: body2.node!.position, image: "Explosionred")
                         addScore(number: 2)
                     }
-                    if CurrentRocketMode == RocketMode.Boosted{
-                        Explode(explodeposition: body2.node!.position)
+                    else if CurrentRocketMode == RocketMode.Boosted{
+                        Explode(explodeposition: body2.node!.position, image: "Explosionred")
                         addScore(number: 1)
                     }
-                    if CurrentRocketMode == RocketMode.Normal{
-                        Explode(explodeposition: body2.node!.position)
+                    else if CurrentRocketMode == RocketMode.Normal{
+                        Explode(explodeposition: body2.node!.position, image: "Explosionred")
                         addScore(number: 1)
                     }
                 }
@@ -757,14 +608,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // If the bullet hits the asteroid
-        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.Asteroid{
+        else if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.Asteroid{
             if body2.node != nil{
                 // Check wether the enemy is on screen when the bullet makes contact
                 if body2.node!.position.y > self.size.height{
                     return
                 }else{
                     let startofFragmentation = body2.node!.position
-                    Explode(explodeposition: body2.node!.position)
+                    Explode(explodeposition: body2.node!.position, image: "Explosionred")
                     
                     FragmentAsteroid(FragPosition: startofFragmentation)
                     body1.node?.removeFromParent()
@@ -774,14 +625,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // If the bullet hits the GOLD asteroid
-        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.GoldAsteroid{
+        else if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.GoldAsteroid{
             if body2.node != nil{
                 // Check wether the enemy is on screen when the bullet makes contact
                 if body2.node!.position.y > self.size.height{
                     return
                 }else{
                     let startofFragmentation = body2.node!.position
-                    Explode(explodeposition: body2.node!.position)
+                    Explode(explodeposition: body2.node!.position, image: "explosion1purple")
                     
                     FragmentGoldAsteroid(FragPosition: startofFragmentation)
                     body1.node?.removeFromParent()
@@ -791,13 +642,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // If the bullet hits the asteroid fragment
-        if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.AsteroidFragment{
+        else if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.AsteroidFragment{
             if body2.node != nil{
                 // Check wether the enemy is on screen when the bullet makes contact
                 if body2.node!.position.y > self.size.height{
                     return
                 }else{
-                    Explode(explodeposition: body2.node!.position)
+                    Explode(explodeposition: body2.node!.position, image: "Explosionred")
                     body1.node?.removeFromParent()
                     body2.node?.removeFromParent()
                 }
@@ -805,114 +656,118 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // If the player hits the asteroid
-        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Asteroid{
+        else if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.Asteroid{
             
             if CurrentRocketMode == RocketMode.BoostedDoubleXP{
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
                 body2.node?.removeFromParent()
                 addScore(number: 2)
             }
-            if CurrentRocketMode == RocketMode.DoubleXP{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
-
-                body1.node?.removeFromParent()
+            else if CurrentRocketMode == RocketMode.DoubleXP{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position, image: "Explosionred")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
+                
                 body2.node?.removeFromParent()
-                gameOver()
+                loseLifeAnimation()
+                loselives()
             }
-            if CurrentRocketMode == RocketMode.Boosted{
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
                 body2.node?.removeFromParent()
                 addScore(number: 1)
             }
-            if CurrentRocketMode == RocketMode.Normal{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Normal{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position, image: "Explosionred")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
 
-                body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
-                gameOver()
+                let hide = SKAction.run {
+                    self.player.isHidden = true
+                }
+                let show = SKAction.run {
+                    self.player.isHidden = false
+                }
+                let wait = SKAction.wait(forDuration: 0.1)
+                let seq = SKAction.sequence([hide, wait, show, hide, wait, show,hide, wait, show, hide, wait, show])
+                player.run(seq)
+                loselives()
             }
         }
         
         // If the player hits the GOLD asteroid
-        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.GoldAsteroid{
+        else if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.GoldAsteroid{
             
             if CurrentRocketMode == RocketMode.BoostedDoubleXP{
-                if body2.node != nil{ExplodePurpleDiamond(explodeposition: body2.node!.position)}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "explosion1blue")}
                 body2.node?.removeFromParent()
                 addScore(number: 10)
             }
-            if CurrentRocketMode == RocketMode.DoubleXP{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{ExplodePurpleDiamond(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.DoubleXP{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position, image: "explosion")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "explosion1green")}
 
-                body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
-                gameOver()
+                loselives()
             }
-            if CurrentRocketMode == RocketMode.Boosted{
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
                 body2.node?.removeFromParent()
                 addScore(number: 5)
             }
-            if CurrentRocketMode == RocketMode.Normal{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{ExplodePurpleDiamond(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Normal{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position, image: "explosion")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "explosion1purple")}
 
-                body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
-                gameOver()
+                loselives()
             }
         }
         
         // If the player hits an asteroid fragment
-        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.AsteroidFragment{
+        else if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.AsteroidFragment{
             
             if CurrentRocketMode == RocketMode.BoostedDoubleXP{
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
                 body2.node?.removeFromParent()
                 addScore(number: 2)
             }
-            if CurrentRocketMode == RocketMode.DoubleXP{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.DoubleXP{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position, image: "Explosionred")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
 
-                body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
-                gameOver()
+                loselives()
             }
-            if CurrentRocketMode == RocketMode.Boosted{
-                if body2.node != nil{Explode(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Boosted{
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
                 body2.node?.removeFromParent()
                 addScore(number: 1)
             }
-            if CurrentRocketMode == RocketMode.Normal{
-                if body1.node != nil{Explode(explodeposition: body1.node!.position)}
-                if body2.node != nil{ExplodePurpleDiamond(explodeposition: body2.node!.position)}
+            else if CurrentRocketMode == RocketMode.Normal{
+                if body1.node != nil{Explode(explodeposition: body1.node!.position,  image: "Explosionred")}
+                if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "Explosionred")}
 
-                body1.node?.removeFromParent()
                 body2.node?.removeFromParent()
-                gameOver()
+                loselives()
             }
         }
         
         // If the player hits a Purple diamond
-        if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.PurpleDiamond{
+        else if body1.categoryBitMask == PhysicsCatergories.Player && body2.categoryBitMask == PhysicsCatergories.PurpleDiamond{
             
             if CurrentRocketMode == RocketMode.BoostedDoubleXP{
                 body2.node?.removeFromParent()
                 addScore(number: 20)
             }
-            if CurrentRocketMode == RocketMode.DoubleXP{
+            else if CurrentRocketMode == RocketMode.DoubleXP{
                 body2.node?.removeFromParent()
                 addScore(number: 20)
             }
-            if CurrentRocketMode == RocketMode.Boosted{
+            else if CurrentRocketMode == RocketMode.Boosted{
                 body2.node?.removeFromParent()
                 addScore(number: 10)
             }
-            if CurrentRocketMode == RocketMode.Normal{
+            else if CurrentRocketMode == RocketMode.Normal{
                 body2.node?.removeFromParent()
                 addScore(number: 10)
             }
@@ -921,73 +776,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // If a bullet hits a purple diamond
         if body1.categoryBitMask == PhysicsCatergories.Bullet && body2.categoryBitMask == PhysicsCatergories.PurpleDiamond{
-            if body2.node != nil{ExplodePurpleDiamond(explodeposition: body2.node!.position)}
+            if body2.node != nil{Explode(explodeposition: body2.node!.position, image: "explosion1purple")}
             body1.node?.removeFromParent()
             body2.node?.removeFromParent()
             }
     }
     
-    @objc func BoostedCountdown(){
-        if counter > 0{
-            counter -= 1
-            CurrentRocketMode = RocketMode.Boosted
-        }
-        else{
-            BoostedTimer.invalidate()
-            BoostedTimer = nil
-            CurrentRocketMode = RocketMode.Normal
-        }
+    func Explode(explodeposition: CGPoint, image: String){
+        let explosion = SKSpriteNode(imageNamed: image)
+        explosion.position = explodeposition
+        explosion.zPosition = 3
+        explosion.setScale(0)
+        self.addChild(explosion)
+        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
+        let fade = SKAction.fadeOut(withDuration: 0.1)
+        let remove = SKAction.removeFromParent()
+        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
+        explosion.run(explosionSequence)
     }
     
-    func Explode(explodeposition: CGPoint){
-        let explosion = SKSpriteNode(imageNamed: "Explosionred")
-        explosion.position = explodeposition
-        explosion.zPosition = 3
-        explosion.setScale(0)
-        self.addChild(explosion)
-        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
-        let fade = SKAction.fadeOut(withDuration: 0.1)
-        let remove = SKAction.removeFromParent()
-        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
-        explosion.run(explosionSequence)
-    }
-    func Explodecoin(explodeposition: CGPoint){
-        let explosion = SKSpriteNode(imageNamed: "explosion")
-        explosion.position = explodeposition
-        explosion.zPosition = 3
-        explosion.setScale(0)
-        self.addChild(explosion)
-        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
-        let fade = SKAction.fadeOut(withDuration: 0.1)
-        let remove = SKAction.removeFromParent()
-        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
-        explosion.run(explosionSequence)
-    }
-    func Exploderoid(explodeposition: CGPoint){
-        let explosion = SKSpriteNode(imageNamed: "Explosion2")
-        explosion.position = explodeposition
-        explosion.zPosition = 3
-        explosion.setScale(0)
-        self.addChild(explosion)
-        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
-        let fade = SKAction.fadeOut(withDuration: 0.1)
-        let remove = SKAction.removeFromParent()
-        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
-        explosion.run(explosionSequence)
-    }
-    func ExplodePurpleDiamond(explodeposition: CGPoint){
-        let explosion = SKSpriteNode(imageNamed: "explosion1purple")
-        explosion.position = explodeposition
-        explosion.zPosition = 3
-        explosion.setScale(0)
-        self.addChild(explosion)
-        let scaleIn = SKAction.scale(to: 1, duration: 0.1)
-        let fade = SKAction.fadeOut(withDuration: 0.1)
-        let remove = SKAction.removeFromParent()
-        let explosionSequence = SKAction.sequence([scaleIn, fade, remove])
-        explosion.run(explosionSequence)
-    }
-
+    
     func FragmentAsteroid(FragPosition: CGPoint){
         let startPoint = FragPosition
         let randomXEnd = CGFloat.random(in: gameArea.minX..<gameArea.maxX)
@@ -1156,7 +964,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.run(seqLoop)
     }
     
-    
     func CheckRocketStatus(){
         print(CurrentRocketMode)
         if CurrentRocketMode == RocketMode.Boosted{
@@ -1231,6 +1038,104 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if player.position.x < gameArea.minX + player.size.width/2{
                 player.position.x = gameArea.minX + player.size.width / 2
             }
+        }
+        
+    }
+    
+    func loseLifeAnimation(){
+        let hide = SKAction.run {
+            self.player.isHidden = true
+        }
+        let show = SKAction.run {
+            self.player.isHidden = false
+        }
+        let wait = SKAction.wait(forDuration: 0.1)
+        let seq = SKAction.sequence([hide, wait, show, hide, wait, show,hide, wait, show, hide, wait, show])
+        player.run(seq)
+    }
+    
+    
+    func loadTextures(){
+        AsteroidTextureAtlas = SKTextureAtlas(named: "AsteroidSpin.atlas")
+        PlayerShipTextureAtlas = SKTextureAtlas(named: "Boost.atlas")
+        PlayerShipBoostedTextureAtlas = SKTextureAtlas(named: "Boost.atlas")
+        BackgroundTextureAtlas = SKTextureAtlas(named: "BackgroundImages.atlas")
+        BoostedBackgroundTextureAtlas = SKTextureAtlas(named: "BoostedBackground.atlas")
+        DoublePointsBackgroundTextureAtlas = SKTextureAtlas(named: "DoublePointsBackground.atlas")
+        BoostedDoublePointsBackgroundTextureAtlas = SKTextureAtlas(named: "BoostedDoublePointsBackground.atlas")
+        GoldAsteroidTextureAtlas = SKTextureAtlas(named: "goldAsteroidSpin.atlas")
+        BoostCoinTextureAtlas = SKTextureAtlas(named: "boostcoinspin.atlas")
+        XPCoinTextureAtlas = SKTextureAtlas(named: "purplexp.atlas")
+        PurpleDiamondTextureAtlas = SKTextureAtlas(named: "purpleDiamond.atlas")
+        GreenDiamondTextureAtlas = SKTextureAtlas(named: "greenDiamond.atlas")
+        BlueDiamondTextureAtlas = SKTextureAtlas(named: "blueDiamond.atlas")
+        EnemyTextureAtlas = SKTextureAtlas(named: "Enemyflames.atlas")
+        
+        for i in 1...EnemyTextureAtlas.textureNames.count{
+            let TexName = "E\(i).png"
+            EnemyTextureArray.append(SKTexture(imageNamed: TexName))
+        }
+        
+        for i in 1...AsteroidTextureAtlas.textureNames.count{
+            let TexName = "A\(i)@0.5x.png"
+            AsteroidTextureArray.append(SKTexture(imageNamed: TexName))
+        }
+        
+        for n in 1...PlayerShipTextureAtlas.textureNames.count{
+            let texture = "Boost\(n).png"
+            PlayerShipTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...PlayerShipBoostedTextureAtlas.textureNames.count{
+            let texture = "Boost\(a).png"
+            PlayerShipBoostedTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...GoldAsteroidTextureAtlas.textureNames.count{
+            let texture = "GA\(a).png"
+            GoldAsteroidTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...BoostCoinTextureAtlas.textureNames.count{
+            let texture = "BoostCoin\(a).png"
+            BoostCoinTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...XPCoinTextureAtlas.textureNames.count{
+            let texture = "XPP\(a).png"
+            XPCoinTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...PurpleDiamondTextureAtlas.textureNames.count{
+            let texture = "Purple\(a).png"
+            PurpleDiamondTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...GreenDiamondTextureAtlas.textureNames.count{
+            let texture = "Green\(a).png"
+            GreenDiamondTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for a in 1...BlueDiamondTextureAtlas.textureNames.count{
+            let texture = "Blue\(a).png"
+            BlueDiamondTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        
+        for p in 1...BackgroundTextureAtlas.textureNames.count{
+            let texture = "glitter-universe-1-\(p).png"
+            BackgroundTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        for p in 1...BoostedBackgroundTextureAtlas.textureNames.count{
+            let texture = "red-universe-1-\(p).png"
+            BoostedBackgroundTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        for p in 1...DoublePointsBackgroundTextureAtlas.textureNames.count{
+            let texture = "green-universe-1-\(p).png"
+            DoublePointsBackgroundTextureArray.append(SKTexture(imageNamed: texture))
+        }
+        for p in 1...BoostedDoublePointsBackgroundTextureAtlas.textureNames.count{
+            let texture = "gold-universe-1-\(p).png"
+            BoostedDoublePointsBackgroundTextureArray.append(SKTexture(imageNamed: texture))
         }
         
     }
